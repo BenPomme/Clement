@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { business } from '../config';
+---
+<Base head="linen" title="Confidentialité et cookies · La Cuisine de Clément" description="Comment La Cuisine de Clément utilise vos données et les cookies." noindex>
+  <section class="section"><div class="wrap prose">
+    <h1>Confidentialité et cookies</h1>
+    <h2>Vos demandes de devis</h2>
+    <p>Les informations du formulaire (prénom, téléphone, e-mail, commune, composition du foyer, préférences alimentaires) servent uniquement à répondre à votre demande et à préparer votre menu. Elles sont transmises par e-mail à {business.chef} via le service Web3Forms, et ne sont ni vendues ni partagées. Elles sont conservées trois ans après le dernier contact, puis supprimées.</p>
+    <p>Les informations sur des allergies ou un régime sont des données de santé : ne donnez que ce qui est utile pour cuisiner pour vous.</p>
+    <p>Vous pouvez demander à consulter, corriger ou supprimer vos données en écrivant à {business.email || 'l\'adresse de contact du site'}. Vous pouvez aussi saisir la CNIL (cnil.fr).</p>
+    <h2>Mesure d'audience et publicité</h2>
+    <p>Avec votre accord seulement, le site utilise Google Analytics et Google Ads pour compter les visites et savoir quelles annonces amènent des demandes. Sans accord, aucun outil Google n'est chargé. Les identifiants de campagne (gclid, utm) peuvent être joints à votre demande de devis pour la rattacher à une annonce.</p>
+    <p>Vous pouvez changer d'avis à tout moment&nbsp;: <button type="button" class="linkish dark" data-consent-open>gérer les cookies</button>. Votre choix est conservé six mois.</p>
+    <h2>WhatsApp</h2>
+    <p>Si vous écrivez à Clément sur WhatsApp, l'échange est soumis aux conditions de WhatsApp (Meta).</p>
+  </div></section>
+</Base>
+<style>.dark { color: var(--kelsch); font-weight: 700; }</style>

@@ -1,0 +1,38 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  label?: string;
+  day?: string;
+  widths?: number[];
+  sizes: string;
+  tilt?: number;
+  labelPos?: string; // CSS inset for the tape, e.g. "auto auto 8% -4%"
+  eager?: boolean;
+  class?: string;
+}
+const { src, alt, label, day, widths = [320, 480, 720, 960], sizes, tilt = 0, labelPos = 'auto auto 6% -3%', eager = false, class: cls } = Astro.props;
+const usable = widths.filter((w) => w <= src.width);
+---
+<figure class:list={['plate', cls]} style={`--tilt:${tilt}deg`}>
+  <Picture
+    src={src}
+    alt={alt}
+    widths={usable.length ? usable : [src.width]}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    fallbackFormat="webp"
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    layout="none"
+  />
+  {label && (
+    <figcaption class="tape" style={`inset:${labelPos};transform:rotate(calc(var(--tilt) * -1 - 2deg))`}>
+      {day && <b>{day} · </b>}{label}
+    </figcaption>
+  )}
+</figure>
+

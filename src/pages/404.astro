@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/links';
+---
+<Base head="linen" title="Page introuvable · La Cuisine de Clément" description="Cette page n'existe pas." noindex>
+  <section class="section"><div class="wrap prose">
+    <h1>Cette assiette n'est pas sur la carte.</h1>
+    <p class="lede">La page demandée n'existe pas ou a changé d'adresse.</p>
+    <p><a class="btn" href={url('/')}>Revenir à l'accueil</a></p>
+  </div></section>
+</Base>

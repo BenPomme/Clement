@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteSection from '../components/QuoteSection.astro';
+import { pricing, euro, afterCredit, recurring } from '../config';
+import { faq, faqLd, crumbsLd } from '../lib/content';
+import { url } from '../lib/links';
+import poisson from '../assets/dishes/poisson-petits-pois.png';
+
+const D = pricing.formulas.decouverte;
+const base = import.meta.env.BASE_URL;
+const qs = faq.filter((f) => /allergies|conserv|présent|crédit|annuler/i.test(f.q));
+---
+<Base
+  title="Préparation de repas à domicile pour seniors · Mulhouse · La Cuisine de Clément"
+  description={`Un cuisinier prépare chaque semaine, dans la cuisine de vos parents, des repas maison adaptés : peu salé, textures, diabète. Mulhouse et Haut-Rhin, 50 % de crédit d'impôt.`}
+  jsonLd={[faqLd(qs), crumbsLd(Astro.site, [{ name: 'Accueil', path: base }, { name: 'Seniors et aidants', path: Astro.url.pathname }])]}
+>
+  <PageHero
+    location="seniors"
+    crumb="Seniors et aidants"
+    title="Des repas maison pour vos parents, cuisinés chez eux"
+    sub="Vos parents tiennent à leur cuisine et à leurs habitudes. Clément vient une fois par semaine, prépare des plats qu'ils aiment, adaptés à leur santé, et range tout au frigo avec des étiquettes lisibles."
+    plate={poisson}
+    plateAlt="Filet de poisson blanc, purée de petits pois et rondelles de radis"
+    plateLabel="Jeu · Poisson, petits pois"
+    household="small"
+    formula="decouverte"
+  />
+
+  <section class="section">
+    <div class="wrap cols">
+      <div class="prose">
+        <h2>Une cuisine qui s'adapte</h2>
+        <p>Peu salé, sans sucre ajouté, textures plus tendres, portions plus petites : Clément construit le menu avec vous et, si besoin, avec les consignes du médecin ou du diététicien. Les recettes de famille ont toute leur place : la tarte à l'oignon de votre mère peut revenir au menu.</p>
+        <h2>Un rendez-vous régulier</h2>
+        <p>Le même jour chaque semaine, la même personne. Vos parents savent qui vient, et vous savez qu'ils ont de vrais repas dans le frigo. Clément peut vous envoyer un message après chaque séance avec le menu de la semaine.</p>
+        <h2>Organisé par les enfants, à distance</h2>
+        <p>Beaucoup de demandes viennent des enfants qui habitent loin. Vous réservez et vous choisissez le menu avec Clément ; la séance a lieu chez vos parents. Le crédit d'impôt profite en principe à la personne chez qui le service est rendu, quand c'est elle qui règle la facture. Si c'est vous qui payez pour vos parents, des conditions particulières s'appliquent : vérifiez votre situation sur impots.gouv.fr.</p>
+        <p class="note">Pour un foyer qui touche l'APA ou la PCH, l'avance immédiate du crédit d'impôt n'est pas possible ; le crédit reste récupérable l'année suivante sur la part payée. <a href={url('/credit-impot-batch-cooking/')}>Tout savoir sur le crédit d'impôt</a></p>
+      </div>
+      <aside class="facts">
+        <h2 class="visually-hidden">En bref</h2>
+        <dl>
+          <div><dt>Formule conseillée</dt><dd>Découverte : 3 plats, environ {D.portions} portions, soit 6 repas pour deux</dd></div>
+          <div><dt>Chaque semaine</dt><dd class="num">{euro(recurring(D.price))}, soit <strong>{euro(afterCredit(recurring(D.price)))}</strong> après crédit d'impôt</dd></div>
+          <div><dt>Courses</dt><dd>Clément peut s'en charger (+{euro(pricing.shopping)})</dd></div>
+          <div><dt>Zone</dt><dd>Mulhouse et Haut-Rhin, <a href={url('/zone-intervention/')}>voir les communes</a></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section on-linen faq-sec" aria-labelledby="sq">
+    <div class="wrap prose">
+      <h2 id="sq">Questions fréquentes</h2>
+      {qs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+  </section>
+
+  <QuoteSection segment="seniors" title="Parlons des repas de vos parents" />
+</Base>
+
+<style>
+  .cols { display: grid; gap: 3rem; }
+  @media (min-width: 62rem) { .cols { grid-template-columns: 1.4fr 0.8fr; gap: 5rem; } }
+  .cols .prose h2:first-child { margin-top: 0; }
+  .facts { align-self: start; background: var(--linen-shade); border-radius: 0.4rem; padding: 1.6rem; }
+  .facts dl { margin: 0; display: grid; gap: 1rem; }
+  .facts dt { font-family: var(--display); font-weight: 750; font-size: 1.1rem; }
+  .facts dd { margin: 0.2rem 0 0; color: var(--ink-soft); }
+  .facts strong { color: var(--kelsch); }
+  .facts a, .prose a { color: var(--kelsch); font-weight: 700; }
+  .faq-sec { padding-top: 0; }
+  details { border-bottom: 1px solid var(--linen-line); }
+  summary { cursor: pointer; padding: 1.1rem 0; font-family: var(--display); font-weight: 700; font-size: 1.2rem; }
+  details p { padding-bottom: 1.2rem; color: var(--ink-soft); }
+</style>

@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { business } from '../config';
+const v = (x: string, fallback = 'à compléter') => x || fallback;
+---
+<Base head="linen" title="Mentions légales · La Cuisine de Clément" description="Mentions légales du site La Cuisine de Clément." noindex>
+  <section class="section"><div class="wrap prose">
+    <h1>Mentions légales</h1>
+    <h2>Éditeur du site</h2>
+    <p>{business.name}, entreprise individuelle de {business.chef}.<br />SIRET : {v(business.siret)}<br />Adresse : {business.city} ({business.postalCode}), {business.region}<br />Contact : {v(business.email || business.phone)}</p>
+    <p>Déclaration Services à la personne : {v(business.sapNumber, 'en cours')}.</p>
+    <h2>Directeur de la publication</h2>
+    <p>{business.chef}</p>
+    <h2>Hébergement</h2>
+    <p>GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
+    <h2>Photographies</h2>
+    <p>Toutes les photos de plats ont été réalisées par {business.chef}. Reproduction interdite sans accord.</p>
+    <h2>Médiation de la consommation</h2>
+    <p>En cas de litige, vous pouvez recourir gratuitement à un médiateur de la consommation. Coordonnées du médiateur : à compléter.</p>
+  </div></section>
+</Base>

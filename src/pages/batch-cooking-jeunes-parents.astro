@@ -1,0 +1,78 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteSection from '../components/QuoteSection.astro';
+import { pricing, euro, afterCredit } from '../config';
+import { faq, faqLd, crumbsLd } from '../lib/content';
+import { url } from '../lib/links';
+import poke from '../assets/dishes/poke-bowl.png';
+
+const S = pricing.formulas.semaine;
+const base = import.meta.env.BASE_URL;
+const qs = faq.filter((f) => /courses|conserv|présent|crédit/i.test(f.q));
+---
+<Base
+  title="Batch cooking pour jeunes parents à Mulhouse · La Cuisine de Clément"
+  description={`Les premières semaines avec bébé : un chef cuisine chez vous des repas maison pour toute la semaine. Mulhouse et Haut-Rhin, ${euro(afterCredit(S.price))} la séance après crédit d'impôt.`}
+  jsonLd={[faqLd(qs), crumbsLd(Astro.site, [{ name: 'Accueil', path: base }, { name: 'Jeunes parents', path: Astro.url.pathname }])]}
+>
+  <PageHero
+    location="parents"
+    crumb="Jeunes parents"
+    title="Les premières semaines avec bébé, le frigo plein"
+    sub="Quand on dort par tranches de trois heures, on ne cuisine pas. Clément vient chez vous, prépare les repas de la semaine et repart sans laisser une casserole dans l'évier."
+    plate={poke}
+    plateAlt="Poke bowl : riz, avocat, edamame, haricots verts, concombre et sauce sésame"
+    plateLabel="Mar · Poke bowl"
+    household="small"
+    formula="semaine"
+  />
+
+  <section class="section">
+    <div class="wrap cols">
+      <div class="prose">
+        <h2>Ce que Clément prévoit pour vous</h2>
+        <p>Des plats complets et nourrissants, qui se réchauffent en quelques minutes et se mangent parfois d'une main. Des soupes et des plats mijotés qui supportent la congélation, pour les semaines où vous ne voulez voir personne. Si vous allaitez ou suivez un régime particulier, dites-le : le menu se construit autour.</p>
+        <h2>Quand réserver</h2>
+        <p>Le plus simple est de prendre contact avant la naissance. On fixe une première date approximative, puis on l'ajuste quand bébé est là. Beaucoup de parents choisissent une séance par semaine pendant le premier mois, puis toutes les deux semaines.</p>
+        <h2>Un cadeau de naissance qui sert</h2>
+        <p>Grands-parents, amis, collègues : vous pouvez offrir une ou plusieurs séances à de jeunes parents de la région de Mulhouse. Écrivez à Clément, il s'occupe du reste avec eux.</p>
+      </div>
+      <aside class="facts">
+        <h2 class="visually-hidden">En bref</h2>
+        <dl>
+          <div><dt>Une séance Semaine</dt><dd>5 plats, environ {S.portions} portions</dd></div>
+          <div><dt>Prix</dt><dd class="num">{euro(S.price)}, soit <strong>{euro(afterCredit(S.price))}</strong> après crédit d'impôt</dd></div>
+          <div><dt>Durée</dt><dd>environ {S.hours} h, vous pouvez faire la sieste</dd></div>
+          <div><dt>Courses</dt><dd>par vous, ou par Clément (+{euro(pricing.shopping)})</dd></div>
+        </dl>
+        <p><a href={url('/#tarifs')}>Toutes les formules</a></p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section on-linen faq-sec" aria-labelledby="pq">
+    <div class="wrap prose">
+      <h2 id="pq">Questions fréquentes</h2>
+      {qs.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+    </div>
+  </section>
+
+  <QuoteSection segment="jeunes-parents" title="On prépare l'arrivée de bébé ?" />
+</Base>
+
+<style>
+  .cols { display: grid; gap: 3rem; }
+  @media (min-width: 62rem) { .cols { grid-template-columns: 1.4fr 0.8fr; gap: 5rem; } }
+  .cols .prose h2:first-child { margin-top: 0; }
+  .facts { align-self: start; background: var(--linen-shade); border-radius: 0.4rem; padding: 1.6rem; }
+  .facts dl { margin: 0 0 1rem; display: grid; gap: 1rem; }
+  .facts dt { font-family: var(--display); font-weight: 750; font-size: 1.1rem; }
+  .facts dd { margin: 0.2rem 0 0; color: var(--ink-soft); }
+  .facts strong { color: var(--kelsch); }
+  .facts a { color: var(--kelsch); font-weight: 700; }
+  .faq-sec { padding-top: 0; }
+  details { border-bottom: 1px solid var(--linen-line); }
+  summary { cursor: pointer; padding: 1.1rem 0; font-family: var(--display); font-weight: 700; font-size: 1.2rem; }
+  details p { padding-bottom: 1.2rem; color: var(--ink-soft); }
+</style>

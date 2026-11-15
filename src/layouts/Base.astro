@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import { business, zone } from '../config';
+import Mark from '../components/Mark.astro';
+import Icon from '../components/Icon.astro';
+import { url, waLink } from '../lib/links';
+
+interface Props {
+  title: string;
+  description: string;
+  head?: 'cloth' | 'linen';
+  noindex?: boolean;
+  jsonLd?: object[];
+  ogImage?: string;
+}
+const { title, description, head = 'cloth', noindex = false, jsonLd = [], ogImage = 'og.jpg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogUrl = new URL(url(ogImage), Astro.site).href;
+const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking à domicile.');
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#22408f" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <script src="../scripts/tracking.ts"></script>
+  </head>
+  <body>
+    <a class="skip" href="#contenu">Aller au contenu</a>
+    <header class:list={['site-head', { 'on-linen': head === 'linen' }]}>
+      <div class="wrap">
+        <a class="brand" href={url('/')}>
+          <Mark />
+          <span>{business.name}<small>Batch cooking à domicile · Mulhouse</small></span>
+        </a>
+        <nav class="head-nav" aria-label="Navigation principale">
+          <a href={url('/#comment')}>Comment ça marche</a>
+          <a href={url('/#tarifs')}>Tarifs</a>
+          <a href={url('/#questions')}>Questions</a>
+          {wa ? (
+            <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="header">
+              <Icon name="whatsapp" /> WhatsApp
+            </a>
+          ) : (
+            <a class="btn" href={url('/#devis')} data-track="cta_click" data-track-location="header">Mon devis</a>
+          )}
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenu">
+      <slot />
+    </main>
+
+    <footer class="site-foot cloth-night">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <a class="brand" href={url('/')}><Mark /><span>{business.name}<small>par {business.chef}, cuisinier</small></span></a>
+            <p style="margin-top:1rem;max-width:32ch;color:var(--kelsch-mist)">Vos repas de la semaine, cuisinés chez vous, à Mulhouse et dans le Haut-Rhin.</p>
+          </div>
+          <div>
+            <h2>Le service</h2>
+            <ul>
+              <li><a href={url('/#comment')}>Comment ça marche</a></li>
+              <li><a href={url('/#tarifs')}>Formules et tarifs</a></li>
+              <li><a href={url('/credit-impot-batch-cooking/')}>Crédit d'impôt de 50 %</a></li>
+              <li><a href={url('/#devis')}>Demander un devis</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Pour qui</h2>
+            <ul>
+              <li><a href={url('/batch-cooking-jeunes-parents/')}>Jeunes parents</a></li>
+              <li><a href={url('/preparation-repas-seniors/')}>Seniors et aidants</a></li>
+              <li><a href={url('/zone-intervention/')}>Zone d'intervention</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Contact</h2>
+            <ul>
+              {wa && <li><a href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="footer">WhatsApp</a></li>}
+              {business.phone && <li><a href={`tel:${business.phone.replace(/\s/g, '')}`} data-track="phone_click" data-track-location="footer">{business.phone}</a></li>}
+              {business.email && <li><a href={`mailto:${business.email}`} data-track="email_click" data-track-location="footer">{business.email}</a></li>}
+              <li>{zone[0].towns.slice(0, 4).join(', ')} et alentours</li>
+            </ul>
+          </div>
+        </div>
+        <div class="legal">
+          <span>© {new Date().getFullYear()} {business.name}</span>
+          <a href={url('/mentions-legales/')}>Mentions légales</a>
+          <a href={url('/confidentialite/')}>Confidentialité</a>
+          <button type="button" class="linkish" data-consent-open>Gérer les cookies</button>
+        </div>
+      </div>
+    </footer>
+
+    <nav class="mbar" aria-label="Actions rapides" data-mbar>
+      <a class="btn" href={url('/#devis')} data-track="cta_click" data-track-location="mobile-bar">Mon menu et mon devis</a>
+      {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="mobile-bar" aria-label="WhatsApp"><Icon name="whatsapp" /></a>}
+    </nav>
+
+    <div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
+      <p>Nous aimerions mesurer la fréquentation du site et l'efficacité de nos annonces (Google Analytics, Google Ads). Rien n'est déposé sans votre accord. <a href={url('/confidentialite/')}>En savoir plus</a></p>
+      <div class="row">
+        <button type="button" class="btn btn-plain" data-consent="refuse">Refuser</button>
+        <button type="button" class="btn btn-plain" data-consent="accept">Accepter</button>
+      </div>
+    </div>
+    <script>
+      // Show the mobile action bar after the first viewport, hide it while the quote form is on screen.
+      const bar = document.querySelector('[data-mbar]');
+      const form = document.getElementById('devis');
+      if (bar) {
+        let pastHero = false, formVisible = false;
+        const sync = () => bar.classList.toggle('show', pastHero && !formVisible);
+        addEventListener('scroll', () => { pastHero = scrollY > innerHeight * 0.9; sync(); }, { passive: true });
+        if (form) new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; sync(); }).observe(form);
+      }
+    </script>
+  </body>
+</html>

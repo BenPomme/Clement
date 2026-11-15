@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { url, waLink } from '../lib/links';
+import Icon from '../components/Icon.astro';
+import Plate from '../components/Plate.astro';
+import crumbles from '../assets/dishes/crumbles.png';
+const wa = waLink('Bonjour Clément, je viens de vous envoyer une demande de devis sur le site.');
+---
+<Base head="linen" title="Merci · La Cuisine de Clément" description="Votre demande a bien été envoyée." noindex>
+  <section class="section"><div class="wrap thanks">
+    <div class="prose">
+      <h1><span data-name>Merci</span>, c'est envoyé.</h1>
+      <p class="lede">Clément a bien reçu votre demande. Il vous rappelle sous 24&nbsp;heures pour parler de vos goûts et vous proposer un premier menu.</p>
+      <p>En attendant, pensez à regarder combien de boîtes de conservation vous avez&nbsp;: c'est la seule chose à préparer.</p>
+      <p class="row">
+        <a class="btn" href={url('/')}>Retour à l'accueil</a>
+        {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="merci"><Icon name="whatsapp" /> Écrire à Clément</a>}
+      </p>
+    </div>
+    <div class="cloth tablecloth"><Plate src={crumbles} alt="Crumbles pomme-ananas en cassolettes" label="À très vite" sizes="20rem" labelPos="auto auto 2% 0" tilt={-2} /></div>
+  </div></section>
+</Base>
+<script>
+  const n = new URLSearchParams(location.search).get('prenom');
+  const el = document.querySelector('[data-name]');
+  if (n && el) el.textContent = `Merci ${n.slice(0, 40)}`;
+</script>
+<style>
+  .thanks { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 62rem) { .thanks { grid-template-columns: 1.2fr 0.8fr; } }
+  .row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  .tablecloth { border-radius: 0.4rem; padding: 3rem 2.5rem; }
+</style>

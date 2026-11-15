@@ -1,0 +1,44 @@
+---
+import Plate from './Plate.astro';
+import Semainier from './Semainier.astro';
+import type { ImageMetadata } from 'astro';
+import { url } from '../lib/links';
+
+interface Props {
+  title: string;
+  sub: string;
+  crumb: string;
+  plate?: ImageMetadata;
+  plateAlt?: string;
+  plateLabel?: string;
+  household?: 'small' | 'family' | 'large';
+  formula?: 'decouverte' | 'semaine';
+  location: string;
+}
+const { title, sub, crumb, plate, plateAlt = '', plateLabel, household, formula, location } = Astro.props;
+---
+<section class="ph cloth">
+  <div class="wrap ph-grid">
+    <div class="ph-copy">
+      <nav class="ph-crumbs" aria-label="Fil d'Ariane"><a href={url('/')}>Accueil</a> <span aria-hidden="true">/</span> {crumb}</nav>
+      <h1>{title}</h1>
+      <p>{sub}</p>
+    </div>
+    {plate && <Plate src={plate} class="ph-plate" alt={plateAlt} label={plateLabel} sizes="(min-width: 62rem) 30vw, 70vw" labelPos="auto auto 4% -2%" tilt={-2} eager />}
+    <div class="ph-sem"><Semainier location={location} household={household} formula={formula} /></div>
+  </div>
+</section>
+
+<style>
+  .ph { padding: clamp(6.5rem, 5rem + 3vw, 8rem) 0 clamp(2.5rem, 2rem + 2vw, 3.5rem); overflow: hidden; }
+  .ph-grid { display: grid; gap: 2rem; }
+  .ph-crumbs { font-size: 0.95rem; color: var(--kelsch-mist); margin-bottom: 1rem; }
+  .ph-crumbs a { color: #fff; }
+  .ph h1 { font-size: clamp(2.5rem, 1.6rem + 4vw, 4.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 0.98; font-variation-settings: 'wdth' 84, 'opsz' 96; max-width: 16ch; }
+  .ph-copy p { margin-top: 1.25rem; font-size: clamp(1.1rem, 1rem + 0.4vw, 1.25rem); max-width: 46ch; color: #eef1fa; }
+  :global(.ph-plate) { width: min(80%, 26rem); justify-self: center; }
+  @media (min-width: 62rem) {
+    .ph-grid { grid-template-columns: 1.2fr 0.8fr; align-items: center; column-gap: 3rem; }
+    .ph-sem { grid-column: 1 / -1; }
+  }
+</style>

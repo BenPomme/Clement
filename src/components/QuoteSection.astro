@@ -1,0 +1,25 @@
+---
+import QuoteForm from './QuoteForm.astro';
+import Icon from './Icon.astro';
+import { waLink } from '../lib/links';
+interface Props { title?: string; segment: string }
+const { title = 'Parlons de votre semaine', segment } = Astro.props;
+const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking à domicile.');
+---
+<section class="section cloth qs" id="devis" aria-labelledby="qs-title">
+  <div class="wrap qs-grid">
+    <div class="qs-copy">
+      <h2 id="qs-title">{title}</h2>
+      <p>Clément vous rappelle sous 24&nbsp;heures avec une première idée de menu et le prix exact. Sans engagement.</p>
+      {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location={`devis-${segment}`}><Icon name="whatsapp" /> Écrire sur WhatsApp</a>}
+    </div>
+    <div class="qs-sheet"><QuoteForm segment={segment} /></div>
+  </div>
+</section>
+<style>
+  .qs-grid { display: grid; gap: 2.5rem; align-items: start; }
+  @media (min-width: 62rem) { .qs-grid { grid-template-columns: 0.75fr 1.25fr; gap: 4rem; } .qs-copy { position: sticky; top: 2rem; } }
+  .qs-copy { display: grid; gap: 1.25rem; justify-items: start; }
+  .qs-copy p { color: #eef1fa; font-size: 1.15rem; max-width: 36ch; }
+  .qs-sheet { background: var(--linen); color: var(--ink); border-radius: 0.4rem; padding: clamp(1.25rem, 1rem + 2vw, 2.5rem); box-shadow: 0 30px 60px -30px rgb(4 10 32 / 0.7); }
+</style>

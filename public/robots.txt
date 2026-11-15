@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://benpomme.github.io/Clement/sitemap-index.xml

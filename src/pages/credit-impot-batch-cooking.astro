@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import QuoteSection from '../components/QuoteSection.astro';
+import { business, pricing, euro, afterCredit, recurring } from '../config';
+import { crumbsLd } from '../lib/content';
+import { url } from '../lib/links';
+
+const D = pricing.formulas.decouverte;
+const S = pricing.formulas.semaine;
+const base = import.meta.env.BASE_URL;
+const rows = [
+  { l: 'Séance Découverte', v: D.price },
+  { l: 'Séance Semaine', v: S.price },
+  { l: 'Séance Semaine + courses par Clément', v: S.price + pricing.shopping },
+  { l: 'Semaine, chaque semaine pendant un mois (4 séances)', v: recurring(S.price) * 4 },
+];
+---
+<Base
+  head="linen"
+  title="Batch cooking à domicile et crédit d'impôt de 50 % · La Cuisine de Clément"
+  description="Le batch cooking à domicile ouvre droit au crédit d'impôt de 50 % des services à la personne, temps de courses compris. Exemples chiffrés, conditions, frontaliers."
+  jsonLd={[crumbsLd(Astro.site, [{ name: 'Accueil', path: base }, { name: "Crédit d'impôt", path: Astro.url.pathname }])]}
+>
+  <article class="section">
+    <div class="wrap prose">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href={url('/')}>Accueil</a> / Crédit d'impôt</nav>
+      <h1>Batch cooking à domicile&nbsp;: 50&nbsp;% de crédit d'impôt</h1>
+      <p class="lede">La préparation de repas à domicile fait partie des services à la personne. La moitié de ce que vous payez pour le temps de Clément vous est rendue par l'administration fiscale, y compris le temps passé à faire vos courses.</p>
+
+      <h2>Ce que ça donne, en euros</h2>
+      <table class="ex">
+        <thead><tr><th scope="col">Prestation</th><th scope="col" class="r">Vous payez</th><th scope="col" class="r">Crédit d'impôt</th><th scope="col" class="r">Coût réel</th></tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr><th scope="row">{r.l}</th><td class="r num">{euro(r.v)}</td><td class="r num">−{euro(afterCredit(r.v))}</td><td class="r num strong">{euro(afterCredit(r.v))}</td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="small">Les ingrédients ne sont pas concernés : ils restent à votre charge, au prix du ticket de caisse.</p>
+
+      <h2>Les règles, simplement</h2>
+      <ul>
+        <li><strong>C'est un crédit, pas une réduction.</strong> Si votre impôt est inférieur au crédit, ou si vous n'êtes pas imposable, la différence vous est remboursée.</li>
+        <li><strong>Plafond annuel :</strong> 12&nbsp;000&nbsp;€ de dépenses par foyer, majoré de 1&nbsp;500&nbsp;€ par enfant à charge et par membre du foyer de plus de 65&nbsp;ans, dans la limite de 15&nbsp;000&nbsp;€. Largement de quoi couvrir une séance par semaine.</li>
+        <li><strong>Les courses comptent</strong> quand elles font partie d'une prestation qui se termine chez vous, comme ici.</li>
+        <li><strong>Vous le déclarez</strong> au printemps, avec l'attestation fiscale annuelle envoyée par La Cuisine de Clément.</li>
+      </ul>
+
+      <h2>Et l'avance immédiate&nbsp;?</h2>
+      <p>Avec l'avance immédiate de l'Urssaf, vous ne payez que la moitié au moment de la facture, au lieu d'attendre l'année suivante. La Cuisine de Clément prévoit de la proposer une fois sa déclaration Services à la personne enregistrée. Elle n'est pas ouverte aux foyers qui touchent l'APA ou la PCH, ni aux paiements en CESU préfinancé.</p>
+
+      <h2>Vous travaillez en Suisse&nbsp;?</h2>
+      <p>Ce qui compte, c'est votre résidence fiscale. Si vous habitez à Saint-Louis, Huningue ou Mulhouse et déclarez vos revenus en France, vous y avez droit, même avec un salaire suisse. Les foyers domiciliés en Suisse ou en Allemagne peuvent réserver une séance, mais sans crédit d'impôt français.</p>
+
+      <p class="note">
+        {business.sapNumber ? `La Cuisine de Clément est déclarée Services à la personne sous le n° ${business.sapNumber}.` : 'La déclaration Services à la personne de La Cuisine de Clément est en cours. Le crédit d\'impôt s\'appliquera aux prestations facturées une fois la déclaration enregistrée.'}
+        Source&nbsp;: <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F12" rel="noopener" target="_blank">service-public.gouv.fr, Emploi d'un salarié à domicile : avantage fiscal</a>.
+      </p>
+    </div>
+  </article>
+  <QuoteSection segment="credit-impot" />
+</Base>
+
+<style>
+  .ex { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; font-size: 1rem; }
+  .ex th, .ex td { text-align: left; padding: 0.8rem 0.5rem 0.8rem 0; border-bottom: 1px solid var(--linen-line); vertical-align: top; }
+  .ex thead th { font-size: 0.88rem; color: var(--ink-soft); border-bottom: 2px solid var(--ink); }
+  .ex .r { text-align: right; white-space: nowrap; padding-left: 0.75rem; padding-right: 0; }
+  .ex .strong { font-family: var(--display); font-weight: 800; font-size: 1.2rem; color: var(--kelsch); }
+  .ex tbody th { font-weight: 600; }
+  .small { font-size: 0.95rem; color: var(--ink-soft); }
+  .prose a { color: var(--kelsch); font-weight: 700; }
+  @media (max-width: 40rem) { .ex td:nth-child(3), .ex th:nth-child(3) { display: none; } }
+</style>
