@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T18:12:43.631320+00:00",
+  "title": "Design System: La Cuisine de Clément",
+  "extensions": {
+    "colorMeta": {
+      "kelsch": {
+        "role": "primary",
+        "displayName": "Kelsch Blue",
+        "tonalRamp": [
+          "#0e1d47",
+          "#162c66",
+          "#22408f",
+          "#3a5aa8",
+          "#5f7bbd",
+          "#8fa3d3",
+          "#c9d3ee",
+          "#eef1fa"
+        ]
+      },
+      "madder": {
+        "role": "secondary",
+        "displayName": "Madder Red",
+        "tonalRamp": [
+          "#4a0f0b",
+          "#8e1d16",
+          "#b0281f",
+          "#c84a40",
+          "#d97168",
+          "#e8a19b",
+          "#f4d0cd",
+          "#fbeeed"
+        ]
+      },
+      "linen": {
+        "role": "neutral",
+        "displayName": "Cool Linen",
+        "tonalRamp": [
+          "#3a4562",
+          "#7c8496",
+          "#c9cec4",
+          "#e3e6df",
+          "#f2f3ef",
+          "#f7f8f5",
+          "#fbfbf9",
+          "#ffffff"
+        ]
+      },
+      "tape": {
+        "role": "neutral",
+        "displayName": "Masking Tape",
+        "tonalRamp": [
+          "#5c5238",
+          "#8f8257",
+          "#d9cda4",
+          "#ece3c4",
+          "#f3edd9",
+          "#f8f4e8",
+          "#fcfaf3",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero h1 only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "h3, legends, formula names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All reading text; low-vision friendly."
+      },
+      "label-tape": {
+        "displayName": "Tape label",
+        "purpose": "Masking-tape labels and semainier days only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "plate-on-cloth",
+        "value": "drop-shadow(0 18px 18px rgb(6 14 40 / .45)) drop-shadow(0 3px 4px rgb(6 14 40 / .35))",
+        "purpose": "Cut-out plates lying on kelsch (filter)."
+      },
+      {
+        "name": "sheet-on-cloth",
+        "value": "0 30px 60px -30px rgb(4 10 32 / .7)",
+        "purpose": "Linen sheets (semainier, form) on cloth."
+      },
+      {
+        "name": "tape",
+        "value": "0 1px 2px rgb(0 0 0 / .18), 0 4px 10px -6px rgb(0 0 0 / .35)",
+        "purpose": "Masking-tape labels."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All transitions; the semainier day drop."
+      },
+      {
+        "name": "day-drop",
+        "value": "0.55s, 55ms stagger",
+        "purpose": "Filled days re-laid on change."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "34rem"
+      },
+      {
+        "name": "md",
+        "value": "40rem"
+      },
+      {
+        "name": "nav",
+        "value": "54rem"
+      },
+      {
+        "name": "lg",
+        "value": "62rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one madder action per viewport.",
+      "html": "<button class=\"ds-btn\">Recevoir mon menu et mon devis →</button>",
+      "css": ".ds-btn{background:#b0281f;color:#fff;border:0;border-radius:.35rem;min-height:3.4rem;padding:.85rem 1.5rem;font:700 1.12rem 'Bricolage Grotesque Variable',sans-serif;box-shadow:0 1px 0 rgb(255 255 255/.18) inset,0 6px 16px -6px rgb(60 10 6/.55);transition:transform .25s cubic-bezier(.16,1,.3,1),background-color .2s}.ds-btn:hover{background:#8e1d16;transform:translateY(-1px)}.ds-btn:focus-visible{outline:3px solid #b0281f;outline-offset:3px}"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Outline button for header and secondary actions.",
+      "html": "<button class=\"ds-quiet\">Mon devis</button>",
+      "css": ".ds-quiet{background:transparent;color:#22408f;border:0;box-shadow:inset 0 0 0 2px currentColor;border-radius:.35rem;min-height:2.75rem;padding:.55rem 1rem;font:700 1rem 'Bricolage Grotesque Variable',sans-serif}.ds-quiet:hover{background:rgb(34 64 143/.08)}.ds-quiet:focus-visible{outline:3px solid #b0281f;outline-offset:3px}"
+    },
+    {
+      "name": "Tape Label",
+      "kind": "custom",
+      "refersTo": "tape-label",
+      "description": "Masking-tape strip naming a dish.",
+      "html": "<span class=\"ds-tape\"><b>Lun · </b>Chili con carne</span>",
+      "css": ".ds-tape{display:inline-block;background:linear-gradient(90deg,rgb(0 0 0/.05),transparent 12%,transparent 88%,rgb(0 0 0/.05)),#ece3c4;color:#1d1d22;font:560 .98rem/1.2 'Shantell Sans Variable',cursive;padding:.4rem .85rem .45rem;border-radius:1px;transform:rotate(-2deg);box-shadow:0 1px 2px rgb(0 0 0/.18),0 4px 10px -6px rgb(0 0 0/.35)}"
+    },
+    {
+      "name": "Segmented Option",
+      "kind": "chip",
+      "refersTo": "segmented-option",
+      "description": "Semainier household / formula choice.",
+      "html": "<label class=\"ds-seg\"><input type=\"radio\" name=\"h\" checked><span>3 à 4</span></label><label class=\"ds-seg\"><input type=\"radio\" name=\"h\"><span>5 et plus</span></label>",
+      "css": ".ds-seg{position:relative;display:inline-block;margin-right:.4rem}.ds-seg input{position:absolute;opacity:0;inset:0}.ds-seg span{display:flex;align-items:center;justify-content:center;min-height:3.2rem;padding:.45rem 1.2rem;border-radius:.35rem;background:#fff;box-shadow:inset 0 0 0 1.5px #c9cec4;font:700 1.08rem 'Bricolage Grotesque Variable',sans-serif;color:#101a36}.ds-seg input:checked+span{background:#22408f;color:#fff;box-shadow:none}.ds-seg input:focus-visible+span{outline:3px solid #b0281f;outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Quote form field.",
+      "html": "<input class=\"ds-input\" placeholder=\"Mulhouse\">",
+      "css": ".ds-input{min-height:3.2rem;padding:.7rem .9rem;border:0;border-radius:.35rem;background:#fff;box-shadow:inset 0 0 0 1.5px #c9cec4;font:1.05rem 'Atkinson Hyperlegible Next Variable',sans-serif;color:#101a36}.ds-input:hover{box-shadow:inset 0 0 0 1.5px #9aa3b8}.ds-input:focus-visible{outline:none;box-shadow:inset 0 0 0 2.5px #22408f}"
+    },
+    {
+      "name": "Preference Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Diet / preference toggle.",
+      "html": "<label class=\"ds-chip\"><input type=\"checkbox\" checked><span>Sans gluten</span></label>",
+      "css": ".ds-chip{position:relative;display:inline-block}.ds-chip input{position:absolute;opacity:0;inset:0}.ds-chip span{display:inline-flex;align-items:center;min-height:2.75rem;padding:.45rem 1rem;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1.5px #c9cec4;font:600 .98rem 'Atkinson Hyperlegible Next Variable',sans-serif}.ds-chip input:checked+span{background:#22408f;color:#fff;box-shadow:none}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La semaine sur la nappe",
+    "overview": "The whole site is a kitchen table covered with an Alsatian kelsch cloth; the week's meals are laid on it as real cut-out plates named with masking tape. Between the cloth fields the page rests on cool linen where prices, steps and answers are set in calm, very legible type.",
+    "keyCharacteristics": [
+      "Full-bleed CSS-woven kelsch on hero, gallery and quote sections",
+      "Real dish cut-outs with drop shadows, never carded",
+      "Masking-tape labels in Shantell Sans only",
+      "Cool linen reading sections, kelsch-night footer",
+      "One madder action per viewport"
+    ],
+    "rules": [
+      {
+        "name": "The One Thread Rule",
+        "body": "Madder appears once per viewport, on the action.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cloth Carries, Never Decorates Rule",
+        "body": "Kelsch fills whole regions; never an accent stripe.",
+        "section": "colors"
+      },
+      {
+        "name": "The Written-Only-On-Tape Rule",
+        "body": "Shantell Sans only on tape labels and semainier days.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do lay real dish cut-outs directly on kelsch fields with the plate drop-shadow.",
+      "Do name every plate with a tape label in Jour · Plat form.",
+      "Do show prices both before and after the 50 % credit, with \"sous réserve\" until the SAP number exists.",
+      "Do keep body text in Atkinson Hyperlegible at ≥17px and tap targets ≥44px."
+    ],
+    "donts": [
+      "Don't put dishes in equal-sized cards or icon-heading-text card grids.",
+      "Don't use Shantell Sans outside tape labels and semainier days.",
+      "Don't use madder for seams, outlines or more than one element per viewport.",
+      "Don't render the check as a dense tartan: keep two white threads per 136px repeat at ~10% opacity.",
+      "Don't use stock chef photography or invented testimonials."
+    ]
+  }
+}

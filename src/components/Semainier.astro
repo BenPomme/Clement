@@ -1,5 +1,5 @@
 ---
-import { pricing, afterCredit, euro } from '../config';
+import { pricing, afterCredit, euro, business } from '../config';
 import { url } from '../lib/links';
 import Icon from './Icon.astro';
 
@@ -70,9 +70,10 @@ const config = { pricing, menu, sizes };
   <div class="sem-foot">
     <p class="sem-price" aria-live="polite">
       <span class="big num" data-after>{euro(afterCredit(init.F.price))}</span>
-      <span class="after">après crédit d'impôt</span>
+      <span class="after">après crédit d'impôt{business.sapNumber ? '' : '*'}</span>
       <span class="before num" data-before>soit {euro(init.F.price)} avant crédit · environ {init.F.hours} h chez vous</span>
     </p>
+    {!business.sapNumber && <p class="sem-note">* sous réserve de la déclaration Services à la personne, en cours.</p>}
     <a class="btn" href={url('/#devis')} data-sem-cta data-track="cta_click" data-track-location={`semainier-${location}`}>
       Recevoir mon menu et mon devis <Icon name="arrow" />
     </a>
@@ -95,7 +96,7 @@ const config = { pricing, menu, sizes };
   .sem::before {
     content: '';
     position: absolute; inset: 0.45rem 0.45rem auto 0.45rem; height: 0;
-    border-top: 2px dashed rgb(176 40 31 / 0.55);
+    border-top: 2px dashed rgb(34 64 143 / 0.45);
     pointer-events: none;
   }
   @media (min-width: 62rem) {
@@ -162,6 +163,7 @@ const config = { pricing, menu, sizes };
   .sem-price .after { font-weight: 700; }
   .sem-price .before { grid-column: 1 / -1; font-size: 0.95rem; color: var(--ink-soft); margin-top: 0.35rem; }
   .sem-foot .btn { flex: 1 1 16rem; max-width: 24rem; }
+  .sem-note { flex: 1 1 100%; order: 3; font-size: 0.85rem; color: var(--ink-soft); }
 </style>
 
 <script>

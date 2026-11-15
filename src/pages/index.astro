@@ -16,7 +16,6 @@ import mille from '../assets/dishes/millefeuille-mangue.png';
 import saumon from '../assets/dishes/saumon-oeuf-poche.png';
 import poke from '../assets/dishes/poke-bowl.png';
 import poisson from '../assets/dishes/poisson-petits-pois.png';
-import entremets from '../assets/dishes/entremets-fruits-rouges.png';
 import montblanc from '../assets/dishes/mont-blanc.png';
 import beignets from '../assets/dishes/beignets.png';
 import choco from '../assets/dishes/chocolat-griottes.png';
@@ -41,10 +40,11 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
           Clément est chef cuisinier. Il vient chez vous, cuisine trois à cinq plats maison pour toute la semaine,
           les range au frigo, étiquetés, et repart en laissant la cuisine propre. À Mulhouse et dans le Haut-Rhin.
         </p>
+        <p class="hero-price num"><a href="#tarifs">Dès <strong>{euro(afterCredit(D.price))}</strong> la séance après crédit d'impôt</a> <span>({euro(D.price)} avant crédit{business.sapNumber ? '' : ', sous réserve'})</span></p>
       </div>
       <div class="hero-plates" aria-label="Quelques plats de Clément">
-        <Plate src={chili} class="hp hp-1" alt="Riz basmati, chili con carne, crème, cheddar et oignons frits, quartier de citron vert" day="Lun" label="Chili con carne" sizes="(min-width: 62rem) 30vw, 70vw" labelPos="62% auto auto 2%" tilt={-3} eager />
-        <Plate src={burrata} class="hp hp-2" alt="Burrata sur roquette, courgettes et aubergines rôties, poivrons confits, tomates séchées" day="Mer" label="Légumes rôtis, burrata" sizes="(min-width: 62rem) 22vw, 52vw" labelPos="auto -6% 4% auto" tilt={2} eager />
+        <Plate src={chili} class="hp hp-1" alt="Riz basmati, chili con carne, crème, cheddar et oignons frits, quartier de citron vert" day="Lun" label="Chili con carne" sizes="(min-width: 62rem) 30vw, 70vw" labelPos="2% 4% auto auto" tilt={-3} eager />
+        <Plate src={burrata} class="hp hp-2" alt="Burrata sur roquette, courgettes et aubergines rôties, poivrons confits, tomates séchées" day="Mer" label="Légumes rôtis, burrata" sizes="(min-width: 62rem) 22vw, 52vw" labelPos="-5% auto auto 0" tilt={2} eager />
         <Plate src={crumbles} class="hp hp-3" alt="Quatre crumbles pomme-ananas en cassolettes, prêts à cuire" day="Ven" label="Crumbles × 4" sizes="(min-width: 62rem) 16vw, 38vw" labelPos="auto auto -4% 8%" tilt={-1} eager />
       </div>
       <div class="hero-sem">
@@ -60,22 +60,22 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
       <p class="lede measure">Une séance, c'est une matinée ou un après-midi. Vous n'avez rien à préparer, à part un peu de place dans le frigo.</p>
       <ol class="timeline">
         <li>
-          <span class="when">La semaine d'avant</span>
+          <span class="when tape">La semaine d'avant</span>
           <h3>On s'appelle quinze minutes</h3>
           <p>Combien vous êtes, ce que vous aimez, ce que les enfants refusent, les allergies, et ce qu'il y a dans votre cuisine.</p>
         </li>
         <li>
-          <span class="when">Trois jours avant</span>
+          <span class="when tape">Trois jours avant</span>
           <h3>Vous recevez votre menu</h3>
           <p>Trois ou cinq plats de saison, que vous modifiez à volonté. Avec la liste de courses, ou Clément s'en occupe.</p>
         </li>
         <li>
-          <span class="when">Le jour J</span>
+          <span class="when tape">Le jour J</span>
           <h3>Clément cuisine chez vous</h3>
           <p>Trois à quatre heures, que vous soyez là ou non. Il range, fait la vaisselle et nettoie le plan de travail.</p>
         </li>
         <li>
-          <span class="when">Du lundi au vendredi</span>
+          <span class="when tape">Du lundi au vendredi</span>
           <h3>Vous réchauffez, c'est tout</h3>
           <p>Chaque boîte porte le nom du plat, la date et la façon de le réchauffer. Le soir, il ne reste qu'à mettre la table.</p>
         </li>
@@ -95,7 +95,6 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
         <Plate src={poke} class="t t-b" alt="Poke bowl : riz, avocat, edamame, haricots verts, concombre, chou, sauce sésame" label="Poke bowl" sizes="(min-width: 62rem) 30vw, 52vw" labelPos="auto 6% -2% auto" tilt={2} />
         <Plate src={poisson} class="t t-c" alt="Filet de poisson blanc sous des rondelles de radis, purée de petits pois, beurre blanc" label="Poisson, petits pois, radis" sizes="(min-width: 62rem) 26vw, 50vw" labelPos="auto auto -6% 10%" tilt={-1} />
         <Plate src={mille} class="t t-d" alt="Mille-feuille de feuilles de brick caramélisées, crème légère et dés de mangue" label="Mille-feuille mangue" sizes="(min-width: 62rem) 24vw, 46vw" labelPos="4% auto auto -2%" tilt={3} />
-        <Plate src={entremets} class="t t-e" alt="Entremets aux fruits rouges nappé de coulis, framboises et groseilles" label="Entremets fruits rouges" sizes="(min-width: 62rem) 22vw, 44vw" labelPos="auto -4% 6% auto" tilt={-2} />
         <Plate src={beignets} class="t t-f" alt="Beignets dorés aux herbes, citron vert, sauce aigre-douce pimentée" label="Beignets, sauce aigre-douce" sizes="(min-width: 62rem) 20vw, 42vw" labelPos="auto auto -6% 0" tilt={1} />
         <Plate src={montblanc} class="t t-g" alt="Mont-blanc : vermicelles de crème de marrons et chantilly dans un pot en porcelaine" label="Mont-blanc" sizes="(min-width: 62rem) 18vw, 40vw" labelPos="auto 0 -4% auto" tilt={-3} />
         <Plate src={choco} class="t t-h" alt="Dessert chocolat, griottes, chantilly et menthe fraîche" label="Chocolat, griottes" sizes="(min-width: 62rem) 14vw, 34vw" widths={[240, 360, 508]} labelPos="auto auto -10% -8%" tilt={2} />
@@ -152,10 +151,11 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
         </aside>
       </div>
 
+      <p class="muted price-note">Prix après crédit d'impôt{business.sapNumber ? '' : ' : sous réserve de la déclaration Services à la personne de La Cuisine de Clément, en cours'}.</p>
       <div class="credit">
         <p class="credit-big"><span class="num">50&nbsp;%</span> de crédit d'impôt</p>
         <div>
-          <p>La préparation de repas à domicile, courses comprises, fait partie des services à la personne. La moitié de ce que vous payez à Clément vous revient, même si vous n'êtes pas imposable. Les ingrédients ne sont pas concernés.</p>
+          <p>La préparation de repas à domicile, courses comprises, fait partie des services à la personne. Une fois la déclaration de La Cuisine de Clément enregistrée, la moitié de ce que vous payez pour le temps de Clément vous revient, même si vous n'êtes pas imposable. Les ingrédients ne sont pas concernés.</p>
           <p class="muted">{business.sapNumber ? `Déclaration Services à la personne n° ${business.sapNumber}.` : 'Déclaration Services à la personne de La Cuisine de Clément en cours.'} <a href={url('/credit-impot-batch-cooking/')}>Comment ça marche, en détail</a></p>
         </div>
       </div>
@@ -232,7 +232,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
     <div class="wrap devis-grid">
       <div class="devis-copy">
         <h2 id="devis-title">Dites-nous qui mange à la maison</h2>
-        <p>Clément vous rappelle sous 24&nbsp;heures avec une première idée de menu et le prix exact. Sans engagement.</p>
+        <p>Clément vous rappelle pour parler de vos goûts, avec une première idée de menu et le prix exact. Sans engagement.</p>
         {wa && (
           <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="devis">
             <Icon name="whatsapp" /> Écrire sur WhatsApp
@@ -251,9 +251,14 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   /* Hero */
   .hero { position: relative; padding: clamp(6rem, 4.5rem + 3vw, 7rem) 0 clamp(2.5rem, 2rem + 2vw, 3.5rem); overflow: hidden; }
   .hero-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
-  .hero h1 { font-size: clamp(3rem, 1.6rem + 5.4vw, 5.4rem); font-weight: 800; letter-spacing: -0.035em; line-height: 0.95; font-variation-settings: 'wdth' 82, 'opsz' 96; max-width: 11ch; }
+  .hero h1 { font-size: clamp(3rem, 1.6rem + 5.4vw, 5.4rem); font-weight: 800; letter-spacing: -0.02em; line-height: 0.95; font-variation-settings: 'wdth' 87, 'opsz' 96; max-width: 11ch; }
   .hero-sub { margin-top: 1.5rem; font-size: clamp(1.1rem, 1rem + 0.45vw, 1.3rem); line-height: 1.55; max-width: 40ch; color: #eef1fa; }
   .hero-plates { position: relative; min-height: 22rem; }
+  .hero-price { margin-top: 1.25rem; font-size: 1.1rem; color: #eef1fa; }
+  .hero-price a { text-decoration: none; }
+  .hero-price strong { font-family: var(--display); font-weight: 800; font-size: 1.6em; color: #fff; letter-spacing: -0.02em; }
+  .hero-price span { font-size: 0.92rem; color: var(--kelsch-mist); }
+  @media (min-width: 62rem) { .hero-price { display: none; } }
   :global(.hp) { position: absolute; }
   :global(.hp-1) { width: min(78%, 30rem); right: 4%; top: 0; z-index: 1; }
   :global(.hp-2) { width: min(56%, 22rem); left: 0; top: 34%; z-index: 2; }
@@ -266,7 +271,8 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
     .hero-sem { grid-column: 1 / -1; margin-top: -2rem; }
   }
   @media (max-width: 40rem) {
-    .hero-plates { min-height: 18rem; }
+    .hero-plates { min-height: 14rem; }
+    :global(.hp-3) { display: none; }
     :global(.hp-1) { width: 74%; }
     .hero-plates :global(.tape) { font-size: 0.85rem; }
     .hero-plates :global(.hp-1 .tape) { inset: 6% auto auto 0 !important; }
@@ -276,10 +282,11 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
 
   /* Timeline */
   .timeline { list-style: none; margin: clamp(2.5rem, 2rem + 2vw, 4rem) 0 0; padding: 0; display: grid; gap: 2rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr)); position: relative; }
-  .timeline li { position: relative; padding-top: 1.6rem; border-top: 3px solid var(--kelsch); }
+  .timeline li { position: relative; padding-top: 2.4rem; border-top: 3px solid var(--kelsch); }
   .timeline li::before { content: ''; position: absolute; top: -0.6rem; left: 0; width: 1rem; height: 1rem; border-radius: 50%; background: var(--linen); box-shadow: inset 0 0 0 3px var(--kelsch); }
   .timeline li:nth-child(3)::before { background: var(--madder); box-shadow: none; }
-  .timeline .when { display: block; font-family: var(--hand); font-weight: 560; color: var(--kelsch); margin-bottom: 0.4rem; }
+  .timeline .when { position: absolute; top: -1.05rem; left: 1.6rem; transform: rotate(-1.5deg); font-size: 0.98rem; }
+  .timeline li:nth-child(even) .when { transform: rotate(1.2deg); }
   .timeline h3 { margin-bottom: 0.6rem; }
   .timeline p { color: var(--ink-soft); }
 
@@ -294,10 +301,9 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
     :global(.t-b) { grid-column: 5 / span 5; margin-top: -2rem; }
     :global(.t-c) { grid-column: 10 / span 3; align-self: end; }
     :global(.t-d) { grid-column: 1 / span 3; margin-top: 1rem; }
-    :global(.t-e) { grid-column: 4 / span 4; }
-    :global(.t-f) { grid-column: 8 / span 3; margin-top: 3rem; }
-    :global(.t-g) { grid-column: 11 / span 2; }
-    :global(.t-h) { grid-column: 9 / span 2; grid-row: 3; justify-self: center; width: 70%; margin-top: -1rem; }
+    :global(.t-f) { grid-column: 4 / span 4; margin-top: 2rem; }
+    :global(.t-g) { grid-column: 8 / span 2; }
+    :global(.t-h) { grid-column: 10 / span 3; justify-self: center; width: 72%; margin-top: 2.5rem; }
   }
   .table :global(.tape) { font-size: 0.92rem; }
   .choose { margin-top: clamp(3rem, 2.5rem + 3vw, 5.5rem); padding-top: 2rem; border-top: 1px solid rgb(255 255 255 / 0.25); display: grid; gap: 1.5rem; }
@@ -318,6 +324,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   .price-table .strong { font-family: var(--display); font-weight: 800; font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem); color: var(--kelsch); }
   .price-table .option .fname { font-size: 1.2rem; }
   .muted { color: var(--ink-soft); font-size: 0.95rem; }
+  .price-note { margin-top: 1rem; }
   @media (max-width: 40rem) {
     .price-table thead { display: none; }
     .price-table tr { display: grid; grid-template-columns: 1fr auto; padding: 1rem 0; border-bottom: 1px solid var(--linen-line); }

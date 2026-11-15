@@ -10,7 +10,7 @@ const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking 
   <div class="wrap qs-grid">
     <div class="qs-copy">
       <h2 id="qs-title">{title}</h2>
-      <p>Clément vous rappelle sous 24&nbsp;heures avec une première idée de menu et le prix exact. Sans engagement.</p>
+      <p>Clément vous rappelle pour parler de vos goûts, avec une première idée de menu et le prix exact. Sans engagement.</p>
       {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location={`devis-${segment}`}><Icon name="whatsapp" /> Écrire sur WhatsApp</a>}
     </div>
     <div class="qs-sheet"><QuoteForm segment={segment} /></div>

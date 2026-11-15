@@ -12,7 +12,7 @@ STORY: Visitor sees real food, understands "a cook comes to my kitchen and fills
 
 FIRST VIEWPORT: Full-bleed kelsch-blue woven field. Left: headline "Votre semaine, cuisinée chez vous." at display scale, one-line subhead. Right: two or three cut-out plates on the cloth with tape labels. Bottom band of the field: the semainier: household-size selector [1–2][3][4][5+], Mon→Sun strip filling with meals, live price + after-credit price, primary button "Recevoir mon menu et mon devis". WhatsApp in the nav.
 
-FORM: Kelsch & semainier, position 1 of my list; seed: none (unavailable) (concept-seed launcher not run in this session; user chose from four presented directions).
+FORM: seed: none (pinned): the user chose "Kelsch & semainier" from four presented directions (its card specified the kelsch world and the semainier first viewport). concept-seed was not run in this session (launcher not executed), so no roll took place.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 

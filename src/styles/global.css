@@ -86,6 +86,9 @@ p { margin: 0; text-wrap: pretty; }
 .skip:focus { top: 1rem; }
 
 /* Cloth surfaces */
+body { overflow-x: clip; }
+.cloth { overflow-x: clip; }
+@media (max-width: 40rem) { .plate .tape { white-space: normal; max-width: 92%; } }
 .cloth { background: var(--kelsch-cloth); background-size: 160px 160px, auto, auto, auto, auto, auto; color: #fff; }
 .cloth-night { background: var(--kelsch-night); color: #fff; }
 

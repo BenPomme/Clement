@@ -61,7 +61,7 @@ const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking
               <Icon name="whatsapp" /> WhatsApp
             </a>
           ) : (
-            <a class="btn" href={url('/#devis')} data-track="cta_click" data-track-location="header">Mon devis</a>
+            <a class="btn btn-quiet" href={url('/#devis')} data-track="cta_click" data-track-location="header">Mon devis</a>
           )}
         </nav>
       </div>
@@ -133,7 +133,9 @@ const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking
       if (bar) {
         let pastHero = false, formVisible = false;
         const sync = () => bar.classList.toggle('show', pastHero && !formVisible);
-        addEventListener('scroll', () => { pastHero = scrollY > innerHeight * 0.9; sync(); }, { passive: true });
+        const hero = document.querySelector('.hero, .ph');
+        if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }).observe(hero);
+        else { pastHero = true; sync(); }
         if (form) new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; sync(); }).observe(form);
       }
     </script>

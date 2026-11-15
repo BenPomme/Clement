@@ -26,15 +26,15 @@ export const faq = [
   },
   {
     q: 'Faut-il une cuisine bien équipée ?',
-    a: "Non. Des plaques, un four, un réfrigérateur et un peu de place suffisent. Clément vient avec ses couteaux et son petit matériel. Prévoyez des boîtes de conservation : au premier appel, il vous dit combien.",
+    a: "Non. Des plaques, un four, un réfrigérateur et un peu de place suffisent. Au premier appel, Clément vous dit s'il faut prévoir quelque chose, et combien de boîtes de conservation préparer.",
   },
   {
     q: 'Dois-je être présent pendant la séance ?',
-    a: "Comme vous voulez. Beaucoup de clients laissent une clé ou télétravaillent dans la pièce d'à côté. Vous retrouvez la cuisine rangée, la vaisselle faite et le frigo rempli.",
+    a: "Comme vous voulez. Vous pouvez laisser une clé, ou travailler dans la pièce d'à côté. Vous retrouvez la cuisine rangée, la vaisselle faite et le frigo rempli.",
   },
   {
     q: 'Comment fonctionne le crédit d\'impôt de 50 % ?',
-    a: `La préparation de repas à domicile, temps de courses compris, fait partie des services à la personne qui ouvrent droit à un crédit d'impôt de 50 %. Une séance Semaine à ${euro(S.price)} vous revient donc à ${euro(afterCredit(S.price))}. C'est un crédit, pas une réduction : même si vous ne payez pas d'impôt sur le revenu, la somme vous est versée. Les ingrédients ne sont pas concernés. La déclaration Services à la personne de La Cuisine de Clément est en cours.`,
+    a: `La préparation de repas à domicile, temps de courses compris, fait partie des services à la personne qui ouvrent droit à un crédit d'impôt de 50 %. Une séance Semaine à ${euro(S.price)} vous revient donc à ${euro(afterCredit(S.price))}. C'est un crédit, pas une réduction : même si vous ne payez pas d'impôt sur le revenu, la somme vous est versée. Les ingrédients ne sont pas concernés. Sous réserve : la déclaration Services à la personne de La Cuisine de Clément est en cours.`,
   },
   {
     q: 'Je travaille en Suisse, j\'y ai droit ?',
@@ -42,7 +42,7 @@ export const faq = [
   },
   {
     q: 'Et si je dois annuler ?',
-    a: "Prévenez Clément au moins 48 heures avant : rien à payer. Si les courses ont déjà été faites pour vous, seuls les ingrédients achetés vous sont facturés, et vous les gardez.",
+    a: "Prévenez Clément le plus tôt possible. Les conditions d'annulation sont indiquées sur votre devis ; si des courses ont déjà été faites pour vous, les ingrédients achetés vous reviennent.",
   },
   {
     q: 'Où intervenez-vous ?',
