@@ -7,8 +7,8 @@ export const business = {
   name: 'La Cuisine de Clément',
   chef: 'Clément Bahr',
   tagline: 'Batch cooking à domicile à Mulhouse',
-  // TODO(Clément): numéro au format international sans + ni espaces, ex. 33612345678
-  whatsapp: '',
+  // WhatsApp de Clément, format international sans + ni espaces
+  whatsapp: '33649362172',
   // TODO(Clément): numéro affiché, ex. "06 12 34 56 78"
   phone: '',
   // TODO(Clément): adresse e-mail de contact

@@ -64,6 +64,7 @@ export const businessLd = (site: URL | undefined, base: string) => {
     '@id': `${home}#business`,
     name: business.name,
     description: 'Batch cooking à domicile : un chef cuisinier prépare chez vous les repas de la semaine, à Mulhouse et dans le Haut-Rhin.',
+    servesCuisine: ['Française', 'Alsacienne', 'Asiatique', 'Indienne', 'Thaïlandaise', 'Vietnamienne', 'Chinoise'],
     url: home,
     image: new URL(`${base.replace(/\/$/, '')}/og.jpg`, site).href,
     founder: { '@type': 'Person', name: business.chef, jobTitle: 'Chef cuisinier' },

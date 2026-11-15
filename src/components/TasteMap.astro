@@ -1,0 +1,101 @@
+---
+// "Sa carte": Clément's favourite dishes placed on a world map (carte = menu and map).
+// Rendered to static SVG at build time; no map library ships to the browser.
+import { geoNaturalEarth1, geoPath, geoGraticule10, geoInterpolate } from 'd3-geo';
+import { feature } from 'topojson-client';
+import land110 from 'world-atlas/land-110m.json';
+
+type Place = { n: number; place: string; dishes: string[]; at: [number, number]; side: 'l' | 'r' | 'a' | 'b'; home?: boolean };
+
+// Dishes as Clément listed them; origin = where the dish comes from.
+const places: Place[] = [
+  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon'], at: [7.34, 47.75], side: 'a', home: true },
+  { n: 2, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], side: 'b' },
+  { n: 3, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], side: 'l' },
+  { n: 4, place: 'Chine', dishes: ['Poitrine de porc braisée'], at: [118.5, 31.5], side: 'a' },
+  { n: 5, place: 'Thaïlande', dishes: ['Curry vert au poulet'], at: [100.5, 14.5], side: 'l' },
+  { n: 6, place: 'Vietnam', dishes: ['Porc au caramel'], at: [106.7, 11.2], side: 'b' },
+  { n: 7, place: 'Jamaïque', dishes: ['Poulet à la jamaïcaine'], at: [-77.3, 18.1], side: 'b' },
+  { n: 8, place: 'Texas', dishes: ['Chili con carne'], at: [-98.5, 30.5], side: 'a' },
+];
+
+const W = 1200;
+const frame = { type: 'MultiPoint', coordinates: [[-112, 2], [138, 2], [-112, 62], [138, 62], [13, 70], [13, -2]] } as any;
+const projection = geoNaturalEarth1().rotate([-13, 0]).fitWidth(W, frame);
+const [[, y0], [, y1]] = geoPath(projection).bounds(frame);
+const H = Math.round(y1 - y0);
+projection.translate([projection.translate()[0], projection.translate()[1] - y0]).clipExtent([[0, 0], [W, H]]);
+const path = geoPath(projection);
+
+const landPath = path(feature(land110 as any, (land110 as any).objects.land) as any) ?? '';
+const gridPath = path(geoGraticule10()) ?? '';
+const home = places[0].at;
+const threads = places.slice(1).map((p) => {
+  const ip = geoInterpolate(home, p.at);
+  return path({ type: 'LineString', coordinates: Array.from({ length: 33 }, (_, i) => ip(i / 32)) } as any) ?? '';
+});
+const pts = places.map((p) => {
+  const [x, y] = projection(p.at)!;
+  return { ...p, x: (x / W) * 100, y: (y / H) * 100 };
+});
+---
+<figure class="taste" aria-labelledby="taste-cap">
+  <figcaption id="taste-cap" class="visually-hidden">Carte du monde : les plats préférés de Clément et leur pays d'origine</figcaption>
+  <div class="map" style={`aspect-ratio:${W} / ${H}`}>
+    <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+      <path class="grid" d={gridPath} />
+      <path class="land" d={landPath} />
+      {threads.map((d) => <path class="thread" d={d} />)}
+    </svg>
+    {pts.map((p) => (
+      <span class:list={['pin', { home: p.home }]} style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">{p.n}</span>
+    ))}
+  </div>
+  <ol class="dishes">
+    {pts.map((p, i) => (
+      <li class={`side-${p.side}`} style={`--x:${p.x}%;--y:${p.y}%;--r:${i % 2 ? 1.5 : -2}deg`}>
+        <span class="no" aria-hidden="true">{p.n}</span>
+        <span class="tape"><b>{p.place} · </b>{p.dishes.join(', ')}</span>
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<style>
+  .taste { margin: 0; }
+  .map { position: relative; width: 100%; }
+  svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .grid { fill: none; stroke: var(--linen-line); stroke-width: 1; opacity: 0.7; }
+  .land { fill: var(--kelsch-mist); stroke: var(--kelsch); stroke-opacity: 0.35; stroke-width: 1; }
+  .thread { fill: none; stroke: var(--kelsch); stroke-width: 2.2; stroke-dasharray: 7 6; stroke-linecap: round; opacity: 0.85; }
+  .pin {
+    position: absolute; translate: -50% -50%;
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--kelsch); color: #fff;
+    font-family: var(--display); font-weight: 800; font-size: 0.9rem; line-height: 1;
+    box-shadow: 0 0 0 3px var(--linen-shade), 0 4px 10px -4px rgb(10 20 50 / 0.6);
+  }
+  .pin.home, .dishes li:first-child .no { background: var(--linen); color: var(--kelsch); box-shadow: inset 0 0 0 3px var(--kelsch), 0 0 0 3px var(--linen-shade); }
+
+  /* Mobile & tablet: a numbered list under the map */
+  .dishes { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: 0.6rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+  .dishes li { display: flex; align-items: center; gap: 0.7rem; }
+  .no { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; background: var(--kelsch); color: #fff; font-family: var(--display); font-weight: 800; font-size: 0.9rem; }
+  .dishes li { min-width: 0; }
+  .dishes .tape { transform: rotate(var(--r)); white-space: normal; }
+  @media (max-width: 40rem) { .pin { width: 1.3rem; height: 1.3rem; font-size: 0.72rem; box-shadow: 0 0 0 2px var(--linen-shade); } .pin.home { box-shadow: inset 0 0 0 2px var(--kelsch), 0 0 0 2px var(--linen-shade); } }
+
+  /* Desktop: the list becomes tape labels stuck on the map */
+  @media (min-width: 75rem) {
+    .taste { position: relative; }
+    .dishes { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; }
+    .dishes li { position: absolute; left: var(--x); top: var(--y); }
+    .dishes .no { display: none; }
+    .dishes .tape { white-space: nowrap; font-size: 0.92rem; }
+    .side-a { translate: -50% calc(-100% - 1.35rem); }
+    .side-b { translate: -50% 1.35rem; }
+    .side-l { translate: calc(-100% - 1.4rem) -50%; }
+    .side-r { translate: 1.4rem -50%; }
+  }
+</style>

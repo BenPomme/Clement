@@ -4,6 +4,7 @@ import Semainier from '../components/Semainier.astro';
 import Plate from '../components/Plate.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import Icon from '../components/Icon.astro';
+import TasteMap from '../components/TasteMap.astro';
 import { Picture } from 'astro:assets';
 import { business, pricing, zone, euro, afterCredit, recurring } from '../config';
 import { faq, faqLd, businessLd } from '../lib/content';
@@ -186,11 +187,21 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
       </figure>
       <div class="chef-copy">
         <h2 id="chef-title">Clément Bahr, cuisinier</h2>
-        <p class="lede">Clément vient de la cuisine professionnelle. Ce qu'il fait chez vous, c'est ce qu'on apprend en brigade&nbsp;: des bases maison, des sauces qui ont du goût, des légumes bien traités, et l'organisation qui permet de sortir cinq plats en quatre heures.</p>
-        <p>Avec La Cuisine de Clément, il cuisine pour des familles plutôt que pour des tables de restaurant&nbsp;: mêmes produits frais, même exigence. Il vit dans la région de Mulhouse.</p>
-        <div class="chef-cta">
-          <a class="btn" href="#devis" data-track="cta_click" data-track-location="chef">Parler à Clément de votre semaine <Icon name="arrow" /></a>
-        </div>
+        <blockquote class="chef-quote">
+          <p>«&nbsp;J'ai été formé à la cuisine française et alsacienne traditionnelle, dans l'une des meilleures winstubs d'Alsace. Mais ma vraie passion, c'est la cuisine asiatique&nbsp;: de l'Inde au Japon, de la Chine à la Thaïlande, en passant par l'Indonésie, l'archipel des épices.&nbsp;»</p>
+        </blockquote>
+        <p>Chez vous, ça donne une cuisine de famille qui voyage&nbsp;: une poule au pot un soir, un curry vert le lendemain. Avec les réflexes de la brigade&nbsp;: des bases maison, des sauces qui ont du goût, et l'organisation qui permet de sortir cinq plats en quatre heures. Il vit dans la région de Mulhouse.</p>
+      </div>
+    </div>
+
+    <div class="wrap sa-carte">
+      <div class="sa-carte-head">
+        <h3>Sa carte, d'ici et d'ailleurs</h3>
+        <p>Les plats que Clément préfère cuisiner. Ils entrent dans votre menu si vous le voulez, à côté de vos classiques.</p>
+      </div>
+      <TasteMap />
+      <div class="chef-cta">
+        <a class="btn" href="#devis" data-track="cta_click" data-track-location="chef">Parler à Clément de votre semaine <Icon name="arrow" /></a>
       </div>
     </div>
   </section>
@@ -362,8 +373,14 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   .chef-photo :global(img) { width: 100%; height: auto; border-radius: 0.3rem; box-shadow: 0 30px 50px -30px rgb(10 20 50 / 0.55); }
   .chef-photo .tape { position: absolute; left: -0.5rem; bottom: 1.5rem; transform: rotate(-3deg); }
   .chef-copy { display: grid; gap: 1.2rem; max-width: 60ch; }
-  .chef-copy .lede { color: var(--ink); }
-  .chef-cta { margin-top: 0.5rem; }
+  .chef-quote { margin: 0; padding-left: 1.25rem; border-left: 3px solid var(--kelsch); }
+  .chef-quote p { font-family: var(--display); font-weight: 650; font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.55rem); line-height: 1.32; letter-spacing: -0.012em; font-variation-settings: 'wdth' 94; color: var(--ink); }
+  .sa-carte { margin-top: clamp(3.5rem, 3rem + 3vw, 6rem); }
+  .sa-carte-head { display: grid; gap: 0.6rem 3rem; margin-bottom: clamp(1.5rem, 1rem + 2vw, 3rem); }
+  .sa-carte-head h3 { font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem); letter-spacing: -0.02em; }
+  .sa-carte-head p { color: var(--ink-soft); max-width: 52ch; }
+  @media (min-width: 62rem) { .sa-carte-head { grid-template-columns: 1fr 1fr; align-items: end; } }
+  .chef-cta { margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
 
   /* Zone */
   .zones { margin: 2rem 0 1.5rem; display: grid; gap: 1.75rem 3rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
