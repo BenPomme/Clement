@@ -39,8 +39,9 @@ Suivi seulement dans GA4 (pas des conversions Ads) : `cta_click` (bouton « Essa
 `floating`, `semainier-hero`, `chef`…), `form_start`, `semainier_interaction`, `dish_photo`.
 
 À savoir :
-- Tant que `forms.web3formsKey` est vide, « Demande d'essai » se déclenche quand WhatsApp s'ouvre, même si la
-  personne n'envoie pas le message. Avec la clé, elle ne compte que les formulaires vraiment reçus : à faire avant de lancer les annonces.
+- La clé Web3Forms est en place (16/11/2026) : les demandes arrivent par e-mail chez Clément
+  (c.bahr.restauration@gmail.com) et « Demande d'essai » ne compte que les formulaires vraiment reçus. Si la clé
+  était vidée, la conversion se déclencherait à l'ouverture de WhatsApp, même sans message envoyé.
 - La campagne optimise sur « Demande d'essai » uniquement ; les clics WhatsApp restent visibles dans les rapports.
 
 ## Mesure
