@@ -38,6 +38,10 @@ export const faq = [
     a: `La préparation de repas à domicile, temps de courses compris, fait partie des services à la personne qui ouvrent droit à un crédit d'impôt de 50 %. Une séance Semaine à ${euro(S.price)} vous revient donc à ${euro(afterCredit(S.price))}. C'est un crédit, pas une réduction : même si vous ne payez pas d'impôt sur le revenu, la somme vous est versée. Les ingrédients ne sont pas concernés. Sous réserve : la déclaration Services à la personne de La Cuisine de Clément est en cours.`,
   },
   {
+    q: 'Comment se passe le paiement ?',
+    a: "Rien à payer avant : vous réglez après la séance, sur facture. Trois possibilités. Par virement. En espèces, mais un paiement en espèces n'ouvre pas droit au crédit d'impôt. Ou directement par l'Urssaf, avec l'avance immédiate : vous ne payez que la moitié, prélevée par l'Urssaf, et le crédit d'impôt n'est plus à attendre. Sous réserve : l'avance immédiate sera proposée dès que La Cuisine de Clément est inscrite à ce service.",
+  },
+  {
     q: 'Je travaille en Suisse, j\'y ai droit ?',
     a: "Si vous habitez en France et y déclarez vos revenus, oui : le crédit d'impôt dépend de votre résidence fiscale, pas du pays où vous travaillez. Les foyers domiciliés en Suisse ou en Allemagne peuvent réserver une séance, mais sans crédit d'impôt français.",
   },
