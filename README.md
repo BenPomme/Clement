@@ -66,5 +66,5 @@ Déposez une photo détourée (PNG transparent de préférence, ou JPG/WebP) dan
 `poitrine-de-porc-braisee.png`, `riz-cantonais.png`, `curry-vert-au-poulet.png`,
 `soupe-de-poulet-a-la-thaie.png`, `pad-thai.png`, `tom-yum-kung.png`,
 `porc-au-caramel.png`, `poulet-a-la-jamaicaine.png`, `chili-con-carne.png`.
-Le plat devient cliquable et sa photo apparaît au survol. Les fichiers `*.ai.png` actuels sont des illustrations générées par IA (affichées « Photo d'illustration ») : une vraie photo `<plat>.png` les remplace automatiquement. La liste des plats se modifie dans
+Le plat devient cliquable et sa photo apparaît au survol. Les fichiers `*.ai.png` actuels sont des illustrations générées par IA : une vraie photo `<plat>.png` les remplace automatiquement. La liste des plats se modifie dans
 `src/components/TasteMap.astro`.

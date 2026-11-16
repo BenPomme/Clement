@@ -82,7 +82,6 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
               <button type="button" class="dish has-img" aria-label={`${d.name} (voir la photo)`}>
                 <span class="peek" aria-hidden="true">
                   <Picture src={d.img.src} alt="" widths={[240, 360, 480].filter((w) => w <= d.img!.src.width)} sizes="12rem" formats={['avif', 'webp']} fallbackFormat="webp" layout="none" loading="lazy" />
-                  <span class:list={['ill', { real: !d.img.ai }]}>{d.img.ai ? "Photo d'illustration" : 'Photo de Clément'}</span>
                 </span>
                 {d.name}
               </button>
@@ -143,8 +142,6 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     opacity: 0; transform: translateY(-8px); transition: opacity 0.18s ease-out, transform 0.28s var(--ease-out, ease-out);
   }
   .peek :global(img) { width: 100%; height: auto; filter: drop-shadow(0 14px 14px rgb(6 14 40 / 0.4)) drop-shadow(0 3px 4px rgb(6 14 40 / 0.3)); }
-  .ill { display: table; margin: 0.3rem auto 0; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--linen); font-family: var(--body); font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); box-shadow: 0 1px 3px rgb(10 20 50 / 0.2); }
-  .ill.real { background: var(--kelsch); color: #fff; }
   .has-img:hover .peek, .has-img:focus-visible .peek, .has-img.open .peek { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .peek { transition: opacity 0.1s linear; transform: none; } }
   @media (max-width: 40rem) {
