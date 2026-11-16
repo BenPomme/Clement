@@ -4,6 +4,7 @@
 //
 // Dish photos: drop a cut-out PNG (or JPG/WebP) named after the dish slug in
 // src/assets/dishes/carte/ (e.g. pad-thai.png) and it appears on hover/tap.
+// A real photo replaces the AI illustration of the same dish (pad-thai.ai.png) automatically.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { geoNaturalEarth1, geoPath, geoGraticule10, geoInterpolate } from 'd3-geo';
@@ -26,7 +27,13 @@ const places: Place[] = [
 
 const slug = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/dishes/carte/*.{png,jpg,jpeg,webp}', { eager: true });
-const photo = (dish: string) => Object.entries(files).find(([p]) => p.split('/').pop()!.replace(/\.\w+$/, '') === slug(dish))?.[1].default;
+// `<slug>.png` = Clément's own photo; `<slug>.ai.png` = AI-generated illustration (used only if no real photo).
+const photo = (dish: string) => {
+  const hits = Object.entries(files).filter(([p]) => p.split('/').pop()!.replace(/(\.ai)?\.\w+$/, '') === slug(dish));
+  const real = hits.find(([p]) => !/\.ai\.\w+$/.test(p));
+  const pick = real ?? hits[0];
+  return pick ? { src: pick[1].default, ai: !real } : undefined;
+};
 
 const W = 1200;
 const frame = { type: 'MultiPoint', coordinates: [[-112, -12], [150, -12], [-112, 64], [150, 64], [19, 72], [19, -14]] } as any;
@@ -73,7 +80,8 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
             {p.items.map((d) => d.img ? (
               <button type="button" class="dish has-img" aria-label={`${d.name} (voir la photo)`}>
                 <span class="peek" aria-hidden="true">
-                  <Picture src={d.img} alt="" widths={[240, 360, 480].filter((w) => w <= d.img!.width)} sizes="12rem" formats={['avif', 'webp']} fallbackFormat="webp" layout="none" loading="lazy" />
+                  <Picture src={d.img.src} alt="" widths={[240, 360, 480].filter((w) => w <= d.img!.src.width)} sizes="12rem" formats={['avif', 'webp']} fallbackFormat="webp" layout="none" loading="lazy" />
+                  {d.img.ai && <span class="ill">Photo d'illustration</span>}
                 </span>
                 {d.name}
               </button>
@@ -86,6 +94,18 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     ))}
   </ol>
 </figure>
+
+<script>
+  // Tap to show a dish photo (iOS Safari doesn't focus buttons on tap); tap elsewhere to close.
+  const btns = document.querySelectorAll<HTMLButtonElement>('.taste .has-img');
+  btns.forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const was = b.classList.contains('open');
+    btns.forEach((o) => o.classList.remove('open'));
+    if (!was) { b.classList.add('open'); (window as any).lcdcTrack?.('dish_photo', { dish: b.getAttribute('aria-label')?.replace(' (voir la photo)', '') }); }
+  }));
+  document.addEventListener('click', () => btns.forEach((o) => o.classList.remove('open')));
+</script>
 
 <style>
   .taste { margin: 0; }
@@ -122,7 +142,8 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     opacity: 0; transform: translateY(-8px); transition: opacity 0.18s ease-out, transform 0.28s var(--ease-out, ease-out);
   }
   .peek :global(img) { width: 100%; height: auto; filter: drop-shadow(0 14px 14px rgb(6 14 40 / 0.4)) drop-shadow(0 3px 4px rgb(6 14 40 / 0.3)); }
-  .has-img:hover .peek, .has-img:focus-visible .peek, .has-img:focus .peek { opacity: 1; transform: none; }
+  .ill { display: table; margin: 0.3rem auto 0; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--linen); font-family: var(--body); font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); box-shadow: 0 1px 3px rgb(10 20 50 / 0.2); }
+  .has-img:hover .peek, .has-img:focus-visible .peek, .has-img.open .peek { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .peek { transition: opacity 0.1s linear; transform: none; } }
   @media (max-width: 40rem) {
     .pin { width: 1.3rem; height: 1.3rem; font-size: 0.72rem; box-shadow: 0 0 0 2px var(--linen-shade); }

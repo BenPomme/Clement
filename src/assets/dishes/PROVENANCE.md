@@ -9,3 +9,11 @@ slight cast correction on 1/8/12, alpha edge softened 0.8px. Mapping: 1 mille-fe
 
 `src/assets/photos/plateau-crumbles.jpg`: Clément's photo 2.jpg, cropped (top 250px removed), autocontrast 0.5%, +8% saturation, light sharpening.
 - carte/chili-con-carne.png: copy of chili-riz.png (Clément's own photo), used as the hover photo on the map.
+
+## AI-generated illustrations (`carte/*.ai.png`)
+
+The 12 `carte/<dish>.ai.png` files are **AI-generated**, not Clément's cooking: made on 16/11/2026 with
+`google/gemini-3.1-flash-image` via OpenRouter (one prompt per dish: dish description + "realistic smartphone food
+photo, 45° angle, dark ceramic bowl, plain background, no text/props"), then cut out with Apple Vision, resized to
+≤900px, alpha edge softened 0.8px, light unsharp mask. The site labels each one "Photo d'illustration" on hover.
+Replace any of them with a real photo named `carte/<dish>.png`; the real photo wins automatically.

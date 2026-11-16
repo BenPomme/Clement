@@ -8,3 +8,7 @@ dist/
 # local-only
 .claude/
 source-photos/
+
+# local secrets
+.env
+.env.*
