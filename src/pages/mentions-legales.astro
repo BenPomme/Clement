@@ -7,7 +7,7 @@ const v = (x: string, fallback = 'à compléter') => x || fallback;
   <section class="section"><div class="wrap prose">
     <h1>Mentions légales</h1>
     <h2>Éditeur du site</h2>
-    <p>{business.name}, entreprise individuelle de {business.chef}.<br />SIRET : {v(business.siret)}<br />Adresse : {business.city} ({business.postalCode}), {business.region}<br />Contact : {v(business.email || business.phone)}</p>
+    <p>{business.name}, entreprise individuelle de {business.chef}.<br />SIRET : {v(business.siret)}<br />Adresse : {business.city} ({business.postalCode}), {business.region}<br />E-mail : {v(business.email || business.legalEmail)}{business.phone && <><br />Téléphone : {business.phone}</>}</p>
     <p>Déclaration Services à la personne : {v(business.sapNumber, 'en cours')}.</p>
     <h2>Directeur de la publication</h2>
     <p>{business.chef}</p>

@@ -11,8 +11,10 @@ export const business = {
   whatsapp: '33649362172',
   // TODO(Clément): numéro affiché, ex. "06 12 34 56 78"
   phone: '',
-  // TODO(Clément): adresse e-mail de contact
+  // Adresse de contact affichée partout (pied de page, données structurées) : vide = non affichée
   email: '',
+  // Adresse affichée seulement sur les pages légales (mentions légales, confidentialité), obligation LCEN/RGPD
+  legalEmail: 'c.bahr.restauration@gmail.com',
   // TODO(Clément): n° de déclaration Services à la personne (SAP…) une fois obtenu sur Nova
   sapNumber: '',
   // TODO(Clément): SIRET une fois la micro-entreprise créée
