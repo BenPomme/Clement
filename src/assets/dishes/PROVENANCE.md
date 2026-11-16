@@ -8,3 +8,4 @@ slight cast correction on 1/8/12, alpha edge softened 0.8px. Mapping: 1 mille-fe
 10 chocolat griottes (cropped) · 11 burrata légumes · 12 entremets fruits rouges.
 
 `src/assets/photos/plateau-crumbles.jpg`: Clément's photo 2.jpg, cropped (top 250px removed), autocontrast 0.5%, +8% saturation, light sharpening.
+- carte/chili-con-carne.png: copy of chili-riz.png (Clément's own photo), used as the hover photo on the map.

@@ -1,27 +1,36 @@
 ---
 // "Sa carte": Clément's favourite dishes placed on a world map (carte = menu and map).
 // Rendered to static SVG at build time; no map library ships to the browser.
+//
+// Dish photos: drop a cut-out PNG (or JPG/WebP) named after the dish slug in
+// src/assets/dishes/carte/ (e.g. pad-thai.png) and it appears on hover/tap.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { geoNaturalEarth1, geoPath, geoGraticule10, geoInterpolate } from 'd3-geo';
 import { feature } from 'topojson-client';
 import land110 from 'world-atlas/land-110m.json';
 
-type Place = { n: number; place: string; dishes: string[]; at: [number, number]; side: 'l' | 'r' | 'a' | 'b'; home?: boolean };
+type Place = { n: number; place: string; dishes: string[]; at: [number, number]; lab: [number, number]; home?: boolean };
 
-// Dishes as Clément listed them; origin = where the dish comes from.
+// Dishes as Clément listed them; `at` = origin of the dish, `lab` = where its tape sits.
 const places: Place[] = [
-  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon'], at: [7.34, 47.75], side: 'a', home: true },
-  { n: 2, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], side: 'b' },
-  { n: 3, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], side: 'l' },
-  { n: 4, place: 'Chine', dishes: ['Poitrine de porc braisée'], at: [118.5, 31.5], side: 'a' },
-  { n: 5, place: 'Thaïlande', dishes: ['Curry vert au poulet'], at: [100.5, 14.5], side: 'l' },
-  { n: 6, place: 'Vietnam', dishes: ['Porc au caramel'], at: [106.7, 11.2], side: 'b' },
-  { n: 7, place: 'Jamaïque', dishes: ['Poulet à la jamaïcaine'], at: [-77.3, 18.1], side: 'b' },
-  { n: 8, place: 'Texas', dishes: ['Chili con carne'], at: [-98.5, 30.5], side: 'a' },
+  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon'], at: [7.34, 47.75], lab: [4, 62], home: true },
+  { n: 2, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], lab: [2, 25] },
+  { n: 3, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], lab: [62, 13] },
+  { n: 4, place: 'Chine', dishes: ['Poitrine de porc braisée', 'Riz cantonais'], at: [116, 33], lab: [127, 48] },
+  { n: 5, place: 'Thaïlande', dishes: ['Curry vert au poulet', 'Soupe de poulet à la thaïe', 'Pad thaï', 'Tom yum kung'], at: [100.5, 14.5], lab: [91, -4] },
+  { n: 6, place: 'Vietnam', dishes: ['Porc au caramel'], at: [106.7, 11.2], lab: [131, 12] },
+  { n: 7, place: 'Jamaïque', dishes: ['Poulet à la jamaïcaine'], at: [-77.3, 18.1], lab: [-74, 6] },
+  { n: 8, place: 'Texas', dishes: ['Chili con carne'], at: [-98.5, 30.5], lab: [-100, 45] },
 ];
 
+const slug = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/dishes/carte/*.{png,jpg,jpeg,webp}', { eager: true });
+const photo = (dish: string) => Object.entries(files).find(([p]) => p.split('/').pop()!.replace(/\.\w+$/, '') === slug(dish))?.[1].default;
+
 const W = 1200;
-const frame = { type: 'MultiPoint', coordinates: [[-112, 2], [138, 2], [-112, 62], [138, 62], [13, 70], [13, -2]] } as any;
-const projection = geoNaturalEarth1().rotate([-13, 0]).fitWidth(W, frame);
+const frame = { type: 'MultiPoint', coordinates: [[-112, -12], [150, -12], [-112, 64], [150, 64], [19, 72], [19, -14]] } as any;
+const projection = geoNaturalEarth1().rotate([-19, 0]).fitWidth(W, frame);
 const [[, y0], [, y1]] = geoPath(projection).bounds(frame);
 const H = Math.round(y1 - y0);
 projection.translate([projection.translate()[0], projection.translate()[1] - y0]).clipExtent([[0, 0], [W, H]]);
@@ -36,8 +45,10 @@ const threads = places.slice(1).map((p) => {
 });
 const pts = places.map((p) => {
   const [x, y] = projection(p.at)!;
-  return { ...p, x: (x / W) * 100, y: (y / H) * 100 };
+  const [lx, ly] = projection(p.lab)!;
+  return { ...p, x, y, lx, ly, items: p.dishes.map((d) => ({ name: d, img: photo(d) })) };
 });
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
 ---
 <figure class="taste" aria-labelledby="taste-cap">
   <figcaption id="taste-cap" class="visually-hidden">Carte du monde : les plats préférés de Clément et leur pays d'origine</figcaption>
@@ -46,16 +57,31 @@ const pts = places.map((p) => {
       <path class="grid" d={gridPath} />
       <path class="land" d={landPath} />
       {threads.map((d) => <path class="thread" d={d} />)}
+      {pts.map((p) => <line class="leader" x1={p.x} y1={p.y} x2={p.lx} y2={p.ly} />)}
     </svg>
     {pts.map((p) => (
-      <span class:list={['pin', { home: p.home }]} style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">{p.n}</span>
+      <span class:list={['pin', { home: p.home }]} style={`left:${pct(p.x, W)};top:${pct(p.y, H)}`} aria-hidden="true">{p.n}</span>
     ))}
   </div>
   <ol class="dishes">
     {pts.map((p, i) => (
-      <li class={`side-${p.side}`} style={`--x:${p.x}%;--y:${p.y}%;--r:${i % 2 ? 1.5 : -2}deg`}>
+      <li style={`--x:${pct(p.lx, W)};--y:${pct(p.ly, H)};--r:${i % 2 ? 1.2 : -1.6}deg`}>
         <span class="no" aria-hidden="true">{p.n}</span>
-        <span class="tape"><b>{p.place} · </b>{p.dishes.join(', ')}</span>
+        <span class="tape">
+          <b>{p.place}</b>
+          <span class="list">
+            {p.items.map((d) => d.img ? (
+              <button type="button" class="dish has-img" aria-label={`${d.name} (voir la photo)`}>
+                <span class="peek" aria-hidden="true">
+                  <Picture src={d.img} alt="" widths={[240, 360, 480].filter((w) => w <= d.img!.width)} sizes="12rem" formats={['avif', 'webp']} fallbackFormat="webp" layout="none" loading="lazy" />
+                </span>
+                {d.name}
+              </button>
+            ) : (
+              <span class="dish">{d.name}</span>
+            ))}
+          </span>
+        </span>
       </li>
     ))}
   </ol>
@@ -68,6 +94,7 @@ const pts = places.map((p) => {
   .grid { fill: none; stroke: var(--linen-line); stroke-width: 1; opacity: 0.7; }
   .land { fill: var(--kelsch-mist); stroke: var(--kelsch); stroke-opacity: 0.35; stroke-width: 1; }
   .thread { fill: none; stroke: var(--kelsch); stroke-width: 2.2; stroke-dasharray: 7 6; stroke-linecap: round; opacity: 0.85; }
+  .leader { display: none; stroke: var(--ink-soft); stroke-width: 1.4; opacity: 0.6; }
   .pin {
     position: absolute; translate: -50% -50%;
     width: 1.75rem; height: 1.75rem; border-radius: 50%;
@@ -78,24 +105,40 @@ const pts = places.map((p) => {
   }
   .pin.home, .dishes li:first-child .no { background: var(--linen); color: var(--kelsch); box-shadow: inset 0 0 0 3px var(--kelsch), 0 0 0 3px var(--linen-shade); }
 
-  /* Mobile & tablet: a numbered list under the map */
-  .dishes { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: 0.6rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
-  .dishes li { display: flex; align-items: center; gap: 0.7rem; }
-  .no { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; background: var(--kelsch); color: #fff; font-family: var(--display); font-weight: 800; font-size: 0.9rem; }
-  .dishes li { min-width: 0; }
-  .dishes .tape { transform: rotate(var(--r)); white-space: normal; }
-  @media (max-width: 40rem) { .pin { width: 1.3rem; height: 1.3rem; font-size: 0.72rem; box-shadow: 0 0 0 2px var(--linen-shade); } .pin.home { box-shadow: inset 0 0 0 2px var(--kelsch), 0 0 0 2px var(--linen-shade); } }
+  /* Phone & tablet: a numbered list under the map */
+  .dishes { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: 0.8rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+  .dishes li { display: flex; align-items: flex-start; gap: 0.7rem; min-width: 0; }
+  .no { flex: none; margin-top: 0.35rem; width: 1.75rem; height: 1.75rem; border-radius: 50%; display: grid; place-items: center; background: var(--kelsch); color: #fff; font-family: var(--display); font-weight: 800; font-size: 0.9rem; }
+  .dishes .tape { transform: rotate(var(--r)); white-space: normal; display: grid; gap: 0.1rem; }
+  .dishes .tape b { font-weight: 750; letter-spacing: 0.02em; }
+  .list { display: flex; flex-wrap: wrap; column-gap: 0.15rem; }
+  .dish:not(:last-child)::after { content: ','; }
+  .dish { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; position: relative; }
+  .has-img { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 0.2em; text-decoration-thickness: 1.5px; }
+  .has-img:focus-visible { outline: 2.5px solid var(--kelsch); outline-offset: 2px; }
+  .peek {
+    position: absolute; z-index: 30; left: 50%; bottom: calc(100% + 0.6rem);
+    width: 11rem; translate: -50% 0; pointer-events: none;
+    opacity: 0; transform: translateY(-8px); transition: opacity 0.18s ease-out, transform 0.28s var(--ease-out, ease-out);
+  }
+  .peek :global(img) { width: 100%; height: auto; filter: drop-shadow(0 14px 14px rgb(6 14 40 / 0.4)) drop-shadow(0 3px 4px rgb(6 14 40 / 0.3)); }
+  .has-img:hover .peek, .has-img:focus-visible .peek, .has-img:focus .peek { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .peek { transition: opacity 0.1s linear; transform: none; } }
+  @media (max-width: 40rem) {
+    .pin { width: 1.3rem; height: 1.3rem; font-size: 0.72rem; box-shadow: 0 0 0 2px var(--linen-shade); }
+    .pin.home { box-shadow: inset 0 0 0 2px var(--kelsch), 0 0 0 2px var(--linen-shade); }
+    .peek { left: 0; translate: 0 0; width: 9rem; }
+  }
 
   /* Desktop: the list becomes tape labels stuck on the map */
   @media (min-width: 75rem) {
     .taste { position: relative; }
+    .leader { display: inline; }
     .dishes { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; }
-    .dishes li { position: absolute; left: var(--x); top: var(--y); }
+    .dishes li { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; pointer-events: auto; }
     .dishes .no { display: none; }
-    .dishes .tape { white-space: nowrap; font-size: 0.92rem; }
-    .side-a { translate: -50% calc(-100% - 1.35rem); }
-    .side-b { translate: -50% 1.35rem; }
-    .side-l { translate: calc(-100% - 1.4rem) -50%; }
-    .side-r { translate: 1.4rem -50%; }
+    .dishes li { width: max-content; max-width: 14.5rem; }
+    .dishes li:hover, .dishes li:focus-within { z-index: 5; }
+    .dishes .tape { font-size: 0.9rem; }
   }
 </style>

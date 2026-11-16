@@ -38,3 +38,14 @@ Tant qu'un champ est vide, la fonction correspondante est simplement désactivé
 ## Photos
 
 Les plats sont détourés depuis les photos de Clément (voir `src/assets/dishes/PROVENANCE.md`). Pour en ajouter : déposer un PNG détouré dans `src/assets/dishes/` et l'utiliser avec le composant `Plate`.
+
+## Photos des plats sur la carte « Sa carte »
+
+Déposez une photo détourée (PNG transparent de préférence, ou JPG/WebP) dans
+`src/assets/dishes/carte/`, nommée d'après le plat en minuscules sans accents :
+`poule-au-pot.png`, `papillotes-de-saumon.png`, `chorba.png`, `aloo-gobi.png`,
+`poitrine-de-porc-braisee.png`, `riz-cantonais.png`, `curry-vert-au-poulet.png`,
+`soupe-de-poulet-a-la-thaie.png`, `pad-thai.png`, `tom-yum-kung.png`,
+`porc-au-caramel.png`, `poulet-a-la-jamaicaine.png`, `chili-con-carne.png`.
+Le plat devient cliquable et sa photo apparaît au survol. La liste des plats se modifie dans
+`src/components/TasteMap.astro`.
