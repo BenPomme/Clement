@@ -2,6 +2,7 @@ import { business, pricing, zone, euro, afterCredit } from '../config';
 
 const D = pricing.formulas.decouverte;
 const S = pricing.formulas.semaine;
+const G = pricing.formulas.grande;
 
 export const faq = [
   {
@@ -10,7 +11,7 @@ export const faq = [
   },
   {
     q: 'Combien de plats et de portions pour une séance ?',
-    a: `La formule Découverte, c'est 3 plats, environ ${D.portions} portions, en 3 heures. La formule Semaine, 5 plats, environ ${S.portions} portions, en 4 heures : de quoi couvrir les dîners du lundi au vendredi pour une famille de quatre. Pour une grande tablée, une heure de plus (${euro(pricing.extraHour.price)}) donne jusqu'à ${pricing.extraHour.portions} portions de plus. Au-delà, Clément propose deux séances dans la semaine ou un devis.`,
+    a: `Une règle simple : Clément facture ${euro(pricing.hourly)} de l'heure. La formule Découverte, c'est ${D.dishes} plats, jusqu'à ${D.portions} portions, en ${D.hours} heures. La Semaine, ${S.dishes} plats, jusqu'à ${S.portions} portions, en ${S.hours} heures : de quoi couvrir les dîners du lundi au vendredi pour une famille de quatre. La Grande semaine, ${G.dishes} plats, jusqu'à ${G.portions} portions, en ${G.hours} heures. Au-delà, une heure de plus par tranche de ${pricing.extraHour.portions} portions.`,
   },
   {
     q: 'Comment choisit-on les plats ?',
@@ -70,7 +71,7 @@ export const businessLd = (site: URL | undefined, base: string) => {
     founder: { '@type': 'Person', name: business.chef, jobTitle: 'Chef cuisinier' },
     ...(business.phone ? { telephone: business.phone } : {}),
     ...(business.email ? { email: business.email } : {}),
-    priceRange: `${euro(D.price)}–${euro(S.price)}`,
+    priceRange: `${euro(D.price)}–${euro(G.price)}`,
     address: { '@type': 'PostalAddress', addressLocality: business.city, postalCode: business.postalCode, addressRegion: 'Grand Est', addressCountry: 'FR' },
     areaServed: zone.flatMap((z) => z.towns).map((t) => ({ '@type': 'City', name: t })),
     hasOfferCatalog: {

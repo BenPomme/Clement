@@ -180,7 +180,7 @@ const steps = [
 
     const detail = () => {
       const p = plan(w);
-      const f = !p.tier ? 'conseil' : p.tier.id === 'devis' ? 'conseil' : p.tier.id;
+      const f = p.tier ? p.tier.id : 'conseil';
       return { f, c: w.courses, people: Math.max(...w.people), repas: describe(w) };
     };
 

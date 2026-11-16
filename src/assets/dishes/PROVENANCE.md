@@ -21,3 +21,9 @@ Replace any of them with a real photo named `carte/<dish>.png`; the real photo w
 - 16/11/2026: lasagnes, pates-bolognaise, pates-carbonara, pates-alfredo, quiches (`*.ai.png`) generated with
   black-forest-labs/flux.2-klein-4b via OpenRouter (~$0.014 each), cut out by background colour + Apple Vision mask.
   Shown with the "Photo d'illustration" label until Clément sends real photos.
+
+## Photos of Clément (src/assets/photos/clement-*.jpg)
+
+Clément's own photos (WhatsApp, 16/11/2026), retouched with bytedance-seed/seedream-5-0-flash via
+OpenRouter: neutral light, tidier background, apron with his name embroidered. Face, body and pose
+are unchanged. Originals stay in source-photos/ (not published). To be validated by Clément.

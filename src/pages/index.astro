@@ -20,7 +20,8 @@ import poisson from '../assets/dishes/poisson-petits-pois.png';
 import montblanc from '../assets/dishes/mont-blanc.png';
 import beignets from '../assets/dishes/beignets.png';
 import choco from '../assets/dishes/chocolat-griottes.png';
-import plateau from '../assets/photos/plateau-crumbles.jpg';
+import portrait from '../assets/photos/clement-portrait.jpg';
+import enCuisine from '../assets/photos/clement-en-cuisine.jpg';
 
 const D = pricing.formulas.decouverte;
 const S = pricing.formulas.semaine;
@@ -29,7 +30,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
 ---
 <Base
   title="Batch cooking à domicile à Mulhouse · La Cuisine de Clément"
-  description={`Un chef cuisinier prépare chez vous les repas de la semaine : 3 à 5 plats maison, étiquetés, cuisine rangée. Mulhouse et Haut-Rhin. Dès ${euro(afterCredit(D.price))} après crédit d'impôt.`}
+  description={`Un chef cuisinier prépare chez vous les repas de la semaine : 3 à 7 plats maison, étiquetés, cuisine rangée. Mulhouse et Haut-Rhin. Dès ${euro(afterCredit(D.price))} après crédit d'impôt.`}
   jsonLd={ld}
 >
   <!-- ── First viewport: the cloth ─────────────────────────── -->
@@ -38,7 +39,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
       <div class="hero-copy">
         <h1 id="hero-title">Votre semaine, cuisinée chez&nbsp;vous.</h1>
         <p class="hero-sub">
-          Clément est chef cuisinier. Il vient chez vous, cuisine trois à cinq plats maison pour toute la semaine,
+          Clément est chef cuisinier. Il vient chez vous, cuisine trois à sept plats maison pour toute la semaine,
           les range au frigo, étiquetés, et repart en laissant la cuisine propre. À Mulhouse et dans le Haut-Rhin.
         </p>
         <p class="hero-price num"><a href="#tarifs">Dès <strong>{euro(afterCredit(D.price))}</strong> la séance après crédit d'impôt</a> <span>({euro(D.price)} avant crédit{business.sapNumber ? '' : ', sous réserve'})</span></p>
@@ -114,8 +115,8 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   <!-- ── Prices ───────────────────────────────────────────── -->
   <section class="section on-linen" id="tarifs" aria-labelledby="tarifs-title">
     <div class="wrap">
-      <h2 id="tarifs-title">Deux formules, des prix clairs</h2>
-      <p class="lede measure">Le prix comprend le temps de Clément, le menu sur mesure, le déplacement dans la zone et le ménage. Les ingrédients sont en plus, au prix du ticket.</p>
+      <h2 id="tarifs-title">Un tarif simple&nbsp;: {euro(pricing.hourly)} de l'heure</h2>
+      <p class="lede measure">Soit <strong>{euro(afterCredit(pricing.hourly))} de l'heure après crédit d'impôt</strong>. Le prix comprend le temps de Clément, le menu sur mesure, le déplacement dans la zone et le ménage. Les ingrédients sont en plus, au prix du ticket.</p>
 
       <div class="prices">
         <table class="price-table">
@@ -124,14 +125,20 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
             <tr><th scope="col">Formule</th><th scope="col">Ce que vous avez</th><th scope="col" class="r">Prix</th><th scope="col" class="r">Après crédit d'impôt</th></tr>
           </thead>
           <tbody>
-            {[D, S].map((F) => (
+            {Object.values(pricing.formulas).map((F) => (
               <tr>
                 <th scope="row"><span class="fname">{F.label}</span></th>
-                <td>{F.dishes} plats, environ {F.portions} portions<br /><span class="muted">environ {F.hours} h chez vous</span></td>
+                <td>{F.dishes} plats, jusqu'à {F.portions} portions<br /><span class="muted">{F.hours} h chez vous</span></td>
                 <td class="r num">{euro(F.price)}</td>
                 <td class="r num strong">{euro(afterCredit(F.price))}</td>
               </tr>
             ))}
+            <tr class="option">
+              <th scope="row"><span class="fname">Au-delà</span></th>
+              <td>Une heure de plus par tranche de {pricing.extraHour.portions} portions<br /><span class="muted">les grandes tablées, ou deux passages dans la semaine</span></td>
+              <td class="r num">+{euro(pricing.extraHour.price)}</td>
+              <td class="r num strong">+{euro(afterCredit(pricing.extraHour.price))}</td>
+            </tr>
             <tr class="option">
               <th scope="row"><span class="fname">Courses</span></th>
               <td>Clément fait les courses avant la séance<br /><span class="muted">ingrédients refacturés au prix du ticket</span></td>
@@ -141,7 +148,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
           </tbody>
         </table>
 
-        <aside class="regular" aria-labelledby="regular-title">
+        {pricing.recurringDiscount > 0 && <aside class="regular" aria-labelledby="regular-title">
           <h3 id="regular-title">Chaque semaine ou tous les quinze jours</h3>
           <p>Les séances régulières sont à <strong>−{pricing.recurringDiscount * 100} %</strong>.</p>
           <ul class="num">
@@ -149,7 +156,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
             <li><span>Découverte</span><span>{euro(recurring(D.price))} <em>soit {euro(afterCredit(recurring(D.price)))}</em></span></li>
           </ul>
           <p class="muted">Sans engagement : vous arrêtez quand vous voulez.</p>
-        </aside>
+        </aside>}
       </div>
 
       <p class="muted price-note">Prix après crédit d'impôt{business.sapNumber ? '' : ' : sous réserve de la déclaration Services à la personne de La Cuisine de Clément, en cours'}.</p>
@@ -182,8 +189,11 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   <section class="section chef" aria-labelledby="chef-title">
     <div class="wrap chef-grid">
       <figure class="chef-photo">
-        <Picture src={plateau} alt="Plateau de cassolettes de crumble pomme-ananas en cuisine professionnelle" widths={[400, 700, 1000]} sizes="(min-width: 62rem) 40vw, 92vw" formats={['avif', 'webp']} layout="none" />
-        <figcaption class="tape">Le même geste qu'en restaurant</figcaption>
+        <Picture class="main" src={portrait} alt="Clément Bahr en veste et tablier noirs de cuisinier, son nom brodé sur le tablier, un rouleau à pâtisserie et une spatule croisés dans les bras" widths={[400, 700, 1000]} sizes="(min-width: 62rem) 36vw, 84vw" formats={['avif', 'webp']} layout="none" />
+        <div class="inset">
+          <Picture src={enCuisine} alt="Clément émince un fenouil sur une planche en bois, près d'une fenêtre" widths={[300, 500]} sizes="(min-width: 62rem) 15vw, 40vw" formats={['avif', 'webp']} layout="none" loading="lazy" />
+          <figcaption class="tape">Le même geste qu'en restaurant</figcaption>
+        </div>
       </figure>
       <div class="chef-copy">
         <h2 id="chef-title">Clément Bahr, cuisinier</h2>
@@ -325,7 +335,7 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
 
   /* Prices */
   .prices { margin-top: clamp(2rem, 1.5rem + 2vw, 3.5rem); display: grid; gap: 2rem; align-items: start; }
-  @media (min-width: 62rem) { .prices { grid-template-columns: 1.7fr 1fr; gap: 3rem; } }
+  @media (min-width: 62rem) { .prices:has(.regular) { grid-template-columns: 1.7fr 1fr; gap: 3rem; } .prices:not(:has(.regular)) { max-width: 52rem; } }
   .price-table { width: 100%; border-collapse: collapse; }
   .price-table th, .price-table td { text-align: left; padding: 1.1rem 0.75rem 1.1rem 0; border-bottom: 1px solid var(--linen-line); vertical-align: top; }
   .price-table thead th { font-size: 0.9rem; font-weight: 700; color: var(--ink-soft); padding-bottom: 0.6rem; border-bottom: 2px solid var(--ink); }
@@ -370,8 +380,13 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   .chef-grid { display: grid; gap: 2.5rem; align-items: center; }
   @media (min-width: 62rem) { .chef-grid { grid-template-columns: 0.9fr 1.1fr; gap: 4.5rem; } }
   .chef-photo { position: relative; margin: 0; }
-  .chef-photo :global(img) { width: 100%; height: auto; border-radius: 0.3rem; box-shadow: 0 30px 50px -30px rgb(10 20 50 / 0.55); }
-  .chef-photo .tape { position: absolute; left: -0.5rem; bottom: 1.5rem; transform: rotate(-3deg); }
+  .chef-photo { margin-right: clamp(1.5rem, 6vw, 3.5rem); margin-bottom: 2.75rem; }
+  .chef-photo :global(img) { display: block; width: 100%; height: auto; }
+  .chef-photo :global(.main) { border-radius: 0.3rem; box-shadow: 0 30px 50px -30px rgb(10 20 50 / 0.55); }
+  /* the action shot, laid on the portrait like a print */
+  .chef-photo .inset { position: absolute; right: calc(-1 * clamp(1.5rem, 6vw, 3.5rem)); bottom: -2.25rem; width: 34%; padding: 0.4rem; background: var(--linen); border-radius: 0.2rem; transform: rotate(2.5deg); box-shadow: 0 18px 30px -16px rgb(10 20 50 / 0.6); }
+  .chef-photo .inset :global(img) { border-radius: 0.1rem; }
+  .chef-photo .tape { position: absolute; right: -0.75rem; bottom: -1.1rem; transform: rotate(-4deg); width: max-content; max-width: 13rem; white-space: normal; font-size: 0.9rem; }
   .chef-copy { display: grid; gap: 1.2rem; max-width: 60ch; }
   .chef-quote { margin: 0; padding-left: 1.25rem; border-left: 3px solid var(--kelsch); }
   .chef-quote p { font-family: var(--display); font-weight: 650; font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.55rem); line-height: 1.32; letter-spacing: -0.012em; font-variation-settings: 'wdth' 94; color: var(--ink); }

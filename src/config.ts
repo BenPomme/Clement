@@ -23,18 +23,24 @@ export const business = {
   instagram: '',
 };
 
-// Prices in euros, before tax credit. Halved on 16/11/2026 to launch well under the
-// local market (benchmark: Chou Cuisine, Haut-Rhin); Clément can raise them here.
+// Prices in euros, before tax credit. One rule: Clément bills by the hour at home.
+// 32 €/h billed ≈ 25 €/h net for Clément after micro-entrepreneur contributions (~21.5 %),
+// i.e. 16 €/h for the client after the 50 % tax credit. Change `hourly` and everything follows.
+const hourly = 32;
+const formula = (id: string, label: string, hours: number, portions: number, dishes: number) =>
+  ({ id, label, hours, portions, dishes, price: hours * hourly });
 export const pricing = {
+  hourly,
   formulas: {
-    decouverte: { id: 'decouverte', label: 'Découverte', dishes: 3, hours: 3, portions: 12, price: 72 },
-    semaine: { id: 'semaine', label: 'Semaine', dishes: 5, hours: 4, portions: 20, price: 117 },
+    decouverte: formula('decouverte', 'Découverte', 3, 12, 3),
+    semaine: formula('semaine', 'Semaine', 4, 20, 5),
+    grande: formula('grande', 'Grande semaine', 5, 30, 7),
   },
-  shopping: 18, // Clément fait les courses (temps de courses, hors denrées)
-  recurringDiscount: 0.2, // séances régulières (chaque semaine ou toutes les deux semaines)
+  // Au-delà de la Grande semaine : une heure de plus par tranche de 10 portions.
+  extraHour: { price: hourly, portions: 10 },
+  shopping: hourly, // Clément fait les courses : une heure (temps de courses, hors denrées)
+  recurringDiscount: 0, // remise séances régulières (0 = pas de remise)
   taxCredit: 0.5,
-  // Une heure de plus sur la formule Semaine, pour les grandes tablées : jusqu'à 8 portions de plus.
-  extraHour: { price: 28, portions: 8 },
 };
 
 export const afterCredit = (n: number) => Math.round(n * (1 - pricing.taxCredit) * 100) / 100;
