@@ -2,10 +2,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// GitHub Pages project site until the custom domain (lacuisinedeclement.fr) is connected.
-// When the domain is live: set SITE_URL=https://lacuisinedeclement.fr and BASE_PATH=/ in the workflow.
-const site = process.env.SITE_URL ?? 'https://benpomme.github.io';
-const base = process.env.BASE_PATH ?? '/Clement';
+// Served by GitHub Pages on the custom domain clementcuisine.fr (set in Settings › Pages).
+const site = process.env.SITE_URL ?? 'https://clementcuisine.fr';
+const base = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   site,

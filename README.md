@@ -1,10 +1,10 @@
 # La Cuisine de Clément
 
-Site de Clément Bahr, batch cooking à domicile à Mulhouse. Astro (statique), déployé sur GitHub Pages à chaque push sur `main`.
+Site de Clément Bahr, batch cooking à domicile à Mulhouse. Astro (statique), déployé sur GitHub Pages à chaque push sur `main`, en ligne sur https://clementcuisine.fr/.
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321/Clement/
+npm run dev      # http://localhost:4321/
 npm run build
 ```
 
@@ -52,7 +52,9 @@ Suivi seulement dans GA4 (pas des conversions Ads) : `cta_click` (bouton « Essa
 
 ## Domaine
 
-`lacuisinedeclement.fr` est libre (15/11/2026). Une fois acheté : ajouter `public/CNAME` avec le domaine, régler le domaine dans *Settings › Pages*, et passer `SITE_URL=https://lacuisinedeclement.fr` et `BASE_PATH=/` dans `.github/workflows/deploy.yml` (et `robots.txt`).
+`clementcuisine.fr` (acheté chez GoDaddy le 16/11/2026). DNS chez GoDaddy : 4 enregistrements A sur `@`
+(`185.199.108.153` à `185.199.111.153`) et `www` en CNAME vers `benpomme.github.io`. Le domaine est réglé dans
+*Settings › Pages* (HTTPS forcé) ; l'ancienne adresse `benpomme.github.io/Clement/` redirige vers lui.
 
 ## Photos
 

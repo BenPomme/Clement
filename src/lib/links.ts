@@ -1,6 +1,6 @@
 import { business } from '../config';
 
-/** Prefix a site path with the deploy base (e.g. /Clement/ on GitHub Pages). */
+/** Prefix a site path with the deploy base ('/' on clementcuisine.fr). */
 export function url(path = '/'): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (/^https?:|^mailto:|^tel:/.test(path)) return path;

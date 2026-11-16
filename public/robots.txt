@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://benpomme.github.io/Clement/sitemap-index.xml
+Sitemap: https://clementcuisine.fr/sitemap-index.xml

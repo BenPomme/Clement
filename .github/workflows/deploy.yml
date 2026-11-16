@@ -26,9 +26,8 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # When lacuisinedeclement.fr is connected: SITE_URL=https://lacuisinedeclement.fr and BASE_PATH=/
-          SITE_URL: https://benpomme.github.io
-          BASE_PATH: /Clement
+          SITE_URL: https://clementcuisine.fr
+          BASE_PATH: /
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
