@@ -66,11 +66,11 @@ export const zone = [
 // Tracking. Leave empty until the accounts exist; nothing loads while empty.
 export const tracking = {
   ga4: '', // e.g. 'G-ABC123XYZ'
-  googleAds: '', // e.g. 'AW-123456789'
+  googleAds: 'AW-18578921609', // compte Google Ads de Clément, 815-282-4846
   // Google Ads conversion labels (Ads › Objectifs › Conversions › balise)
-  adsLeadLabel: '', // conversion "Demande de devis"
-  adsWhatsappLabel: '', // conversion "Clic WhatsApp"
-  adsPhoneLabel: '', // conversion "Clic téléphone"
+  adsLeadLabel: 'grvGCJz3ybkdEImxj5tF', // "Demande d'essai", principale
+  adsWhatsappLabel: 'ScsbCJ_3ybkdEImxj5tF', // "Clic WhatsApp", secondaire
+  adsPhoneLabel: 'JxjCCKL3ybkdEImxj5tF', // "Clic téléphone", secondaire
   leadValue: pricing.formulas.semaine.price, // valeur estimée d'un lead (EUR) envoyée avec la conversion
 };
 
