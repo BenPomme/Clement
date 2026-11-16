@@ -17,3 +17,7 @@ The 12 `carte/<dish>.ai.png` files are **AI-generated**, not Clément's cooking:
 photo, 45° angle, dark ceramic bowl, plain background, no text/props"), then cut out with Apple Vision, resized to
 ≤900px, alpha edge softened 0.8px, light unsharp mask. The site labels each one "Photo d'illustration" on hover.
 Replace any of them with a real photo named `carte/<dish>.png`; the real photo wins automatically.
+
+- 16/11/2026: lasagnes, pates-bolognaise, pates-carbonara, pates-alfredo, quiches (`*.ai.png`) generated with
+  black-forest-labs/flux.2-klein-4b via OpenRouter (~$0.014 each), cut out by background colour + Apple Vision mask.
+  Shown with the "Photo d'illustration" label until Clément sends real photos.

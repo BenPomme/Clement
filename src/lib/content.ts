@@ -10,7 +10,7 @@ export const faq = [
   },
   {
     q: 'Combien de plats et de portions pour une séance ?',
-    a: `La formule Découverte, c'est 3 plats, environ ${D.portions} portions, en 3 heures. La formule Semaine, 5 plats, environ ${S.portions} portions, en 4 heures : de quoi couvrir les dîners du lundi au vendredi pour une famille de quatre. Pour un foyer de cinq personnes ou plus, Clément ajuste les quantités et la durée sur devis.`,
+    a: `La formule Découverte, c'est 3 plats, environ ${D.portions} portions, en 3 heures. La formule Semaine, 5 plats, environ ${S.portions} portions, en 4 heures : de quoi couvrir les dîners du lundi au vendredi pour une famille de quatre. Pour une grande tablée, une heure de plus (${euro(pricing.extraHour.price)}) donne jusqu'à ${pricing.extraHour.portions} portions de plus. Au-delà, Clément propose deux séances dans la semaine ou un devis.`,
   },
   {
     q: 'Comment choisit-on les plats ?',

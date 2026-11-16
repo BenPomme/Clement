@@ -15,14 +15,15 @@ type Place = { n: number; place: string; dishes: string[]; at: [number, number];
 
 // Dishes as Clément listed them; `at` = origin of the dish, `lab` = where its tape sits.
 const places: Place[] = [
-  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon'], at: [7.34, 47.75], lab: [4, 62], home: true },
-  { n: 2, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], lab: [2, 25] },
-  { n: 3, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], lab: [62, 13] },
-  { n: 4, place: 'Chine', dishes: ['Poitrine de porc braisée', 'Riz cantonais'], at: [116, 33], lab: [127, 48] },
-  { n: 5, place: 'Thaïlande', dishes: ['Curry vert au poulet', 'Soupe de poulet à la thaïe', 'Pad thaï', 'Tom yum kung'], at: [100.5, 14.5], lab: [91, -4] },
-  { n: 6, place: 'Vietnam', dishes: ['Porc au caramel'], at: [106.7, 11.2], lab: [131, 12] },
-  { n: 7, place: 'Jamaïque', dishes: ['Poulet à la jamaïcaine'], at: [-77.3, 18.1], lab: [-74, 6] },
-  { n: 8, place: 'Texas', dishes: ['Chili con carne'], at: [-98.5, 30.5], lab: [-100, 45] },
+  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon', 'Quiches'], at: [7.34, 47.75], lab: [-44, 58], home: true },
+  { n: 2, place: 'Italie', dishes: ['Lasagnes', 'Pâtes bolognaise', 'Pâtes carbonara', 'Pâtes Alfredo'], at: [12.5, 41.9], lab: [36, 60] },
+  { n: 3, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], lab: [2, 25] },
+  { n: 4, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], lab: [62, 13] },
+  { n: 5, place: 'Chine', dishes: ['Poitrine de porc braisée', 'Riz cantonais'], at: [116, 33], lab: [127, 48] },
+  { n: 6, place: 'Thaïlande', dishes: ['Curry vert au poulet', 'Soupe de poulet à la thaïe', 'Pad thaï', 'Tom yum kung'], at: [100.5, 14.5], lab: [91, -4] },
+  { n: 7, place: 'Vietnam', dishes: ['Porc au caramel'], at: [106.7, 11.2], lab: [131, 12] },
+  { n: 8, place: 'Jamaïque', dishes: ['Poulet à la jamaïcaine'], at: [-77.3, 18.1], lab: [-74, 6] },
+  { n: 9, place: 'Texas', dishes: ['Chili con carne'], at: [-98.5, 30.5], lab: [-100, 45] },
 ];
 
 const slug = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

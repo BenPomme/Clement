@@ -1,6 +1,7 @@
 ---
 import Plate from './Plate.astro';
 import Semainier from './Semainier.astro';
+import type { Preset } from '../lib/semainier';
 import type { ImageMetadata } from 'astro';
 import { url } from '../lib/links';
 
@@ -11,11 +12,10 @@ interface Props {
   plate?: ImageMetadata;
   plateAlt?: string;
   plateLabel?: string;
-  household?: 'small' | 'family' | 'large';
-  formula?: 'decouverte' | 'semaine';
+  preset?: Preset;
   location: string;
 }
-const { title, sub, crumb, plate, plateAlt = '', plateLabel, household, formula, location } = Astro.props;
+const { title, sub, crumb, plate, plateAlt = '', plateLabel, preset, location } = Astro.props;
 ---
 <section class="ph cloth">
   <div class="wrap ph-grid">
@@ -25,7 +25,7 @@ const { title, sub, crumb, plate, plateAlt = '', plateLabel, household, formula,
       <p>{sub}</p>
     </div>
     {plate && <Plate src={plate} class="ph-plate" alt={plateAlt} label={plateLabel} sizes="(min-width: 62rem) 30vw, 70vw" labelPos="auto auto 4% -2%" tilt={-2} eager />}
-    <div class="ph-sem"><Semainier location={location} household={household} formula={formula} /></div>
+    <div class="ph-sem"><Semainier location={location} preset={preset} /></div>
   </div>
 </section>
 

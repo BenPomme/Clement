@@ -14,6 +14,7 @@ const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking 
   <input type="hidden" name="from_name" value="Site La Cuisine de Clément" />
   <input type="hidden" name="segment" value={segment} />
   <input type="hidden" name="attribution" value="" />
+  <input type="hidden" name="repas" value="" />
   <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
 
   <fieldset>
@@ -32,6 +33,7 @@ const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking 
         <select name="formule">
           <option value="decouverte">Découverte · 3 plats ({euro(pricing.formulas.decouverte.price)})</option>
           <option value="semaine" selected>Semaine · 5 plats ({euro(pricing.formulas.semaine.price)})</option>
+          <option value="semaine-plus">Semaine + 1 h · 6 à 7 plats ({euro(pricing.formulas.semaine.price + pricing.extraHour.price)})</option>
           <option value="conseil">Je ne sais pas encore</option>
         </select>
       </label>
@@ -170,11 +172,11 @@ const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking 
     let started = false;
 
     // Prefill from the semainier
-    const sizeMap: Record<string, string> = { small: '1 à 2', family: '3 à 4', large: '5 et plus' };
     document.addEventListener('lcdc:selection', (e) => {
-      const d = (e as CustomEvent).detail as { h: string; f: string; c: boolean };
-      (form.elements.namedItem('foyer') as HTMLSelectElement).value = sizeMap[d.h];
+      const d = (e as CustomEvent).detail as { f: string; c: boolean; people: number; repas: string };
+      if (d.people > 0) (form.elements.namedItem('foyer') as HTMLSelectElement).value = d.people <= 2 ? '1 à 2' : d.people <= 4 ? '3 à 4' : '5 et plus';
       (form.elements.namedItem('formule') as HTMLSelectElement).value = d.f;
+      (form.elements.namedItem('repas') as HTMLInputElement).value = d.repas;
       (form.elements.namedItem('courses') as HTMLInputElement).checked = d.c;
     });
 
@@ -222,7 +224,7 @@ const wa = waLink('Bonjour Clément, je voudrais un devis pour du batch cooking 
       const key = data.get('access_key');
       if (!key) {
         // No form backend yet: hand the request over to WhatsApp or e-mail instead of losing it.
-        const lines = [`Bonjour Clément, je voudrais un devis.`, `Foyer : ${data.get('foyer')}`, `Formule : ${data.get('formule')}`, `Rythme : ${data.get('rythme')}`, `Commune : ${data.get('commune')}`, `Courses : ${data.get('courses') ? 'oui' : 'non'}`, prefs && `Préférences : ${prefs}`, data.get('message') && `Notes : ${data.get('message')}`, `${data.get('prenom')} · ${data.get('telephone')}`].filter(Boolean).join('\n');
+        const lines = [`Bonjour Clément, je voudrais un devis.`, `Foyer : ${data.get('foyer')}`, `Formule : ${data.get('formule')}`, data.get('repas') && `Repas : ${data.get('repas')}`, `Rythme : ${data.get('rythme')}`, `Commune : ${data.get('commune')}`, `Courses : ${data.get('courses') ? 'oui' : 'non'}`, prefs && `Préférences : ${prefs}`, data.get('message') && `Notes : ${data.get('message')}`, `${data.get('prenom')} · ${data.get('telephone')}`].filter(Boolean).join('\n');
         if (business.whatsapp) {
           track('generate_lead', { method: 'whatsapp_fallback', form_segment: form.dataset.segment });
           window.open(`https://wa.me/${business.whatsapp}?text=${encodeURIComponent(lines)}`, '_blank', 'noopener');

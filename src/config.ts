@@ -23,17 +23,18 @@ export const business = {
   instagram: '',
 };
 
-// Prices in euros, before tax credit. Positioned ~10 % under the local market
-// (benchmark: Chou Cuisine, Haut-Rhin, Nov. 2026). To validate with Clément.
+// Prices in euros, before tax credit. Halved on 16/11/2026 to launch well under the
+// local market (benchmark: Chou Cuisine, Haut-Rhin); Clément can raise them here.
 export const pricing = {
   formulas: {
-    decouverte: { id: 'decouverte', label: 'Découverte', dishes: 3, hours: 3, portions: 12, price: 144 },
-    semaine: { id: 'semaine', label: 'Semaine', dishes: 5, hours: 4, portions: 20, price: 234 },
+    decouverte: { id: 'decouverte', label: 'Découverte', dishes: 3, hours: 3, portions: 12, price: 72 },
+    semaine: { id: 'semaine', label: 'Semaine', dishes: 5, hours: 4, portions: 20, price: 117 },
   },
-  shopping: 36, // Clément fait les courses (temps de courses, hors denrées)
+  shopping: 18, // Clément fait les courses (temps de courses, hors denrées)
   recurringDiscount: 0.2, // séances régulières (chaque semaine ou toutes les deux semaines)
   taxCredit: 0.5,
-  hourly: 25, // Clément's original reference rate, kept for the extra-hour line
+  // Une heure de plus sur la formule Semaine, pour les grandes tablées : jusqu'à 8 portions de plus.
+  extraHour: { price: 28, portions: 8 },
 };
 
 export const afterCredit = (n: number) => Math.round(n * (1 - pricing.taxCredit) * 100) / 100;
@@ -62,7 +63,7 @@ export const tracking = {
   adsLeadLabel: '', // conversion "Demande de devis"
   adsWhatsappLabel: '', // conversion "Clic WhatsApp"
   adsPhoneLabel: '', // conversion "Clic téléphone"
-  leadValue: 117, // valeur estimée d'un lead (EUR) envoyée avec la conversion
+  leadValue: pricing.formulas.semaine.price, // valeur estimée d'un lead (EUR) envoyée avec la conversion
 };
 
 // Form backend (static hosting). Create a free access key at https://web3forms.com

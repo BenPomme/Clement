@@ -1,77 +1,63 @@
 ---
-import { pricing, afterCredit, euro, business } from '../config';
+// The semainier: how many at lunch and dinner, which meals of the week, and the session that fits.
+import { pricing, euro, business } from '../config';
+import { days, meals, defaultWeek, plan, copy, MAX_PEOPLE, type Preset } from '../lib/semainier';
 import { url } from '../lib/links';
 import Icon from './Icon.astro';
 
-interface Props { household?: 'small' | 'family' | 'large'; formula?: 'decouverte' | 'semaine'; location?: string }
-const { household = 'family', formula = 'semaine', location = 'hero' } = Astro.props;
+interface Props { location?: string; preset?: Preset }
+const { location = 'hero', preset = 'famille' } = Astro.props;
 const uid = `sem-${location}`;
 
-const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-const menu = ['Chili con carne, riz', 'Curry vert au poulet', 'Légumes rôtis, burrata', 'Porc au caramel', 'Poule au pot'];
-const sizes = { small: { label: '1 à 2', n: 2 }, family: { label: '3 à 4', n: 4 }, large: { label: '5 et plus', n: 6 } };
-
-// Server-side first paint (same maths as the client script below).
-function plan(h: keyof typeof sizes, f: 'decouverte' | 'semaine') {
-  const F = pricing.formulas[f];
-  const n = sizes[h].n;
-  const meals = h === 'large' ? F.dishes : Math.floor(F.portions / n);
-  return { F, meals, dinners: Math.min(7, meals), lunches: Math.max(0, meals - 7) };
-}
-const init = plan(household, formula);
-const config = { pricing, menu, sizes };
+const w = defaultWeek(preset);
+const p = plan(w);
+const c = copy(w);
+const short = (d: string) => d.slice(0, 3);
+const steps = [
+  { m: 1, label: 'Au dîner', of: 'au dîner' },
+  { m: 0, label: 'Au déjeuner', of: 'au déjeuner' },
+] as const;
 ---
-<div class="sem" data-semainier data-location={location} data-config={JSON.stringify(config)}>
+<div class="sem" data-semainier data-location={location} data-preset={preset}>
   <div class="sem-controls">
-    <fieldset class="seg">
-      <legend>Vous êtes combien à la maison&nbsp;?</legend>
-      <div class="seg-row">
-        {Object.entries(sizes).map(([k, s]) => (
-          <label>
-            <input type="radio" name={`${uid}-h`} value={k} checked={k === household} />
-            <span>{s.label}</span>
-          </label>
-        ))}
+    <p class="sem-q">Vous êtes combien à table&nbsp;?</p>
+    {steps.map((s) => (
+      <div class="step" data-step={s.m}>
+        <span class="step-l" id={`${uid}-l${s.m}`}>{s.label}</span>
+        <div class="step-c">
+          <button type="button" data-delta="-1" aria-label={`Une personne de moins ${s.of}`} disabled={w.people[s.m] === 0}>−</button>
+          <output aria-labelledby={`${uid}-l${s.m}`} aria-live="polite" data-n>{w.people[s.m]}</output>
+          <button type="button" data-delta="1" aria-label={`Une personne de plus ${s.of}`} disabled={w.people[s.m] === MAX_PEOPLE}>+</button>
+        </div>
       </div>
-    </fieldset>
-    <fieldset class="seg">
-      <legend>Quelle formule&nbsp;?</legend>
-      <div class="seg-row">
-        {Object.values(pricing.formulas).map((F) => (
-          <label>
-            <input type="radio" name={`${uid}-f`} value={F.id} checked={F.id === formula} />
-            <span>{F.label} <small>{F.dishes} plats</small></span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
+    ))}
     <label class="sem-toggle">
-      <input type="checkbox" name={`${uid}-c`} />
+      <input type="checkbox" name={`${uid}-c`} data-courses />
       <span class="box" aria-hidden="true"><Icon name="check" /></span>
       <span>Clément fait aussi les courses <span class="num">(+{euro(pricing.shopping)})</span></span>
     </label>
   </div>
 
-  <div class="sem-week-wrap">
-    <ol class="sem-week" aria-label="Votre semaine">
-      {days.map((d, i) => (
-        <li class:list={{ full: i < init.dinners }} style={`--i:${i}`}>
-          <span class="day">{d}</span>
-          <span class="dish">{i < init.dinners ? menu[i % init.F.dishes] : ''}</span>
-          <span class="extra">{i < init.lunches ? '+ un midi' : ''}</span>
-        </li>
-      ))}
-    </ol>
-    <p class="sem-summary" aria-live="polite" data-summary>
-      ≈ {init.F.portions} portions : {init.dinners} dîners pour {sizes[household].label} personnes{init.lunches ? `, plus ${init.lunches} déjeuners` : ''}.
-    </p>
-  </div>
+  <fieldset class="sem-week-wrap">
+    <legend class="sem-q">Cochez les repas de la semaine</legend>
+    <div class="grid">
+      {days.map((d, i) => <span class="dh" style={`--c:${i + 2};--r:1;--mc:1;--mr:${i + 2}`} aria-hidden="true">{short(d)}</span>)}
+      {meals.map((m, k) => <span class:list={['mh', { off: w.people[k] === 0 }]} style={`--c:1;--r:${k + 2};--mc:${k + 2};--mr:1`} aria-hidden="true">{k ? 'Soir' : 'Midi'}</span>)}
+      {meals.map((m, k) => days.map((d, i) => (
+        <label class:list={['cell', { off: w.people[k] === 0 }]} style={`--c:${i + 2};--r:${k + 2};--mc:${k + 2};--mr:${i + 2}`}>
+          <input type="checkbox" data-m={k} data-d={i} checked={w.on[k][i]} aria-label={`${d}, ${m.toLowerCase()}`} />
+          <span class="face"><span class="dish">{p.dish[k][i] ?? ''}</span></span>
+        </label>
+      )))}
+    </div>
+    <p class="sem-summary" aria-live="polite" data-summary set:html={c.summary} />
+  </fieldset>
 
   <div class="sem-foot">
     <p class="sem-price" aria-live="polite">
-      <span class="big num" data-after>{euro(afterCredit(init.F.price))}</span>
-      <span class="after">après crédit d'impôt{business.sapNumber ? '' : '*'}</span>
-      <span class="before num" data-before>soit {euro(init.F.price)} avant crédit · environ {init.F.hours} h chez vous</span>
+      <span class="big num" data-after>{c.after}</span>
+      <span class="after" data-after-label hidden={!c.afterLabel}>après crédit d'impôt{business.sapNumber ? '' : '*'}</span>
+      <span class="before num" data-before>{c.before}</span>
     </p>
     {!business.sapNumber && <p class="sem-note">* sous réserve de la déclaration Services à la personne, en cours.</p>}
     <a class="btn" href={url('/#devis')} data-sem-cta data-track="cta_click" data-track-location={`semainier-${location}`}>
@@ -92,37 +78,30 @@ const config = { pricing, menu, sizes };
     grid-template-columns: 1fr;
     box-shadow: 0 30px 60px -30px rgb(4 10 32 / 0.7), 0 2px 0 rgb(255 255 255 / 0.6) inset;
   }
-  /* madder thread stitched along the hem */
+  /* thread stitched along the hem */
   .sem::before {
     content: '';
     position: absolute; inset: 0.45rem 0.45rem auto 0.45rem; height: 0;
     border-top: 2px dashed rgb(34 64 143 / 0.45);
     pointer-events: none;
   }
-  @media (min-width: 62rem) {
-    .sem { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr); grid-template-rows: auto auto; align-items: start; column-gap: 2.25rem; }
-    .sem-controls { grid-row: 1 / span 2; }
-    .sem-foot { grid-column: 2; padding-top: 0.9rem; }
-    .sem-week li { min-height: 6.2rem; }
+  .sem-q { font-weight: 700; font-size: 1.02rem; margin: 0 0 0.1rem; padding: 0; }
+  .sem-controls { display: grid; gap: 0.6rem 0.9rem; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); align-items: center; }
+  .sem-controls > .sem-q { grid-column: 1 / -1; }
+
+  .step { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.45rem 0.5rem 0.45rem 0.9rem; border-radius: var(--radius); background: #fff; box-shadow: inset 0 0 0 1.5px var(--linen-line); }
+  .step-l { font-family: var(--display); font-weight: 700; font-size: 1.08rem; }
+  .step-c { display: flex; align-items: center; gap: 0.25rem; }
+  .step output { min-width: 2.2ch; text-align: center; font-family: var(--display); font-weight: 800; font-size: 1.45rem; font-variant-numeric: tabular-nums; color: var(--kelsch); }
+  .step button {
+    width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--linen-shade); color: var(--kelsch);
+    font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1;
+    cursor: pointer; transition: background-color 0.2s, color 0.2s;
   }
-  .sem-controls { display: grid; gap: 1rem; }
-  .seg { border: 0; margin: 0; padding: 0; min-width: 0; }
-  .seg legend { font-weight: 700; font-size: 1.02rem; margin-bottom: 0.5rem; padding: 0; }
-  .seg-row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-  .seg label { position: relative; flex: 1 1 0; min-width: 0; }
-  .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .seg span {
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    min-height: 3.2rem; padding: 0.45rem 0.6rem; text-align: center;
-    border-radius: var(--radius);
-    background: #fff; box-shadow: inset 0 0 0 1.5px var(--linen-line);
-    font-family: var(--display); font-weight: 700; font-size: 1.08rem; line-height: 1.1;
-    transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
-  }
-  .seg small { font-family: var(--body); font-weight: 500; font-size: 0.85rem; opacity: 0.8; }
-  .seg label:hover span { box-shadow: inset 0 0 0 1.5px var(--kelsch); }
-  .seg input:checked + span { background: var(--kelsch); color: #fff; box-shadow: inset 0 0 0 1.5px var(--kelsch); }
-  .seg input:focus-visible + span { outline: 3px solid var(--madder); outline-offset: 2px; }
+  .step button:hover:not(:disabled) { background: var(--kelsch); color: #fff; }
+  .step button:disabled { opacity: 0.35; cursor: default; }
 
   .sem-toggle { display: flex; align-items: center; gap: 0.7rem; cursor: pointer; font-weight: 600; position: relative; }
   .sem-toggle input { position: absolute; opacity: 0; width: 1.6rem; height: 1.6rem; margin: 0; }
@@ -131,31 +110,44 @@ const config = { pricing, menu, sizes };
   .sem-toggle input:checked + .box { background: var(--kelsch); color: #fff; box-shadow: none; }
   .sem-toggle input:focus-visible + .box { outline: 3px solid var(--madder); outline-offset: 2px; }
 
-  .sem-week { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.3rem; }
-  .sem-week li {
-    min-height: 7.2rem; padding: 0.5rem 0.4rem; border-radius: 0.3rem;
+  /* Week grid: days across, lunch/dinner down. On phones it turns: days down, lunch/dinner across. */
+  .sem-week-wrap { border: 0; margin: 0; padding: 0; min-width: 0; container-type: inline-size; }
+  .sem-week-wrap legend { margin-bottom: 0.6rem; }
+  .grid { display: grid; grid-template-columns: 2.9rem repeat(7, minmax(0, 1fr)); gap: 0.3rem; }
+  .grid > * { grid-column: var(--c); grid-row: var(--r); }
+  .dh, .mh { font-family: var(--display); font-weight: 750; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .dh { text-align: center; padding-bottom: 0.1rem; }
+  .mh { align-self: center; }
+  .mh.off { opacity: 0.45; }
+  .cell { position: relative; display: block; min-height: 4.4rem; cursor: pointer; }
+  .cell input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .face {
+    display: flex; height: 100%; padding: 0.4rem 0.35rem; border-radius: 0.3rem;
     background: repeating-linear-gradient(135deg, transparent 0 6px, rgb(34 64 143 / 0.06) 6px 7px), var(--linen-shade);
-    display: flex; flex-direction: column; gap: 0.35rem;
-    transition: background-color 0.35s var(--ease-out);
+    box-shadow: inset 0 0 0 1.5px transparent;
+    transition: background-color 0.3s var(--ease-out), box-shadow 0.2s;
   }
-  .sem-week .day { font-family: var(--display); font-weight: 750; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); }
-  .sem-week .dish { font-family: var(--hand); font-size: 0.88rem; line-height: 1.2; color: var(--marker); hyphens: auto; overflow-wrap: anywhere; }
-  .sem-week .extra { margin-top: auto; font-size: 0.78rem; font-weight: 700; color: var(--madder); }
-  .sem-week li.full { background: var(--tape); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 12px -8px rgb(0 0 0 / 0.4); }
-  .sem-week li.full .day { color: var(--kelsch); }
-  .sem-week li.drop { animation: drop 0.55s var(--ease-out) both; animation-delay: calc(var(--i) * 55ms); }
+  .cell:hover .face { box-shadow: inset 0 0 0 1.5px var(--kelsch); }
+  .cell input:focus-visible + .face { outline: 3px solid var(--madder); outline-offset: 2px; }
+  .cell input:checked + .face { background: var(--tape); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 12px -8px rgb(0 0 0 / 0.4); }
+  .cell.off input:checked + .face { background: var(--linen-shade); box-shadow: inset 0 0 0 1.5px var(--linen-line); }
+  .dish { font-family: var(--hand); font-size: 0.84rem; line-height: 1.15; color: var(--marker); hyphens: manual; overflow-wrap: break-word; }
+  .cell.drop .face { animation: drop 0.45s var(--ease-out) both; }
   @keyframes drop {
-    from { transform: translateY(-10px) rotate(-1.5deg); box-shadow: 0 14px 18px -10px rgb(0 0 0 / 0.35); }
+    from { transform: translateY(-8px) rotate(-1.5deg); box-shadow: 0 14px 18px -10px rgb(0 0 0 / 0.35); }
     to { transform: none; }
   }
-  @media (prefers-reduced-motion: reduce) { .sem-week li.drop { animation: none; } }
-  @media (max-width: 34rem) {
-    .sem-week { grid-template-columns: 1fr; gap: 0.25rem; }
-    .sem-week li { min-height: 0; flex-direction: row; align-items: baseline; gap: 0.75rem; padding: 0.45rem 0.7rem; }
-    .sem-week .day { width: 2.6rem; flex: none; }
-    .sem-week .extra { margin: 0 0 0 auto; white-space: nowrap; }
+  @media (prefers-reduced-motion: reduce) { .cell.drop .face { animation: none; } }
+  @container (max-width: 34rem) {
+    .grid { grid-template-columns: 2.6rem 1fr 1fr; gap: 0.25rem; }
+    .grid > * { grid-column: var(--mc); grid-row: var(--mr); }
+    .dh { text-align: left; align-self: center; }
+    .mh { text-align: center; }
+    .cell { min-height: 2.75rem; }
+    .face { align-items: center; padding: 0.3rem 0.55rem; }
   }
-  .sem-summary { margin-top: 0.7rem; font-size: 0.98rem; color: var(--ink-soft); }
+  .sem-summary { margin-top: 0.8rem; font-size: 0.98rem; color: var(--ink-soft); }
+  .sem-summary :global(strong) { color: var(--ink); }
 
   .sem-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-top: 1.1rem; border-top: 1px solid var(--linen-line); }
   .sem-price { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: baseline; }
@@ -167,69 +159,91 @@ const config = { pricing, menu, sizes };
 </style>
 
 <script>
-  import { euro, afterCredit } from '../config';
-  type Cfg = { pricing: any; menu: string[]; sizes: Record<string, { label: string; n: number }> };
+  import { defaultWeek, plan, copy, describe, MAX_PEOPLE, type Week, type Preset } from '../lib/semainier';
 
   document.querySelectorAll<HTMLElement>('[data-semainier]').forEach((root) => {
-    const cfg: Cfg = JSON.parse(root.dataset.config!);
-    const cells = [...root.querySelectorAll<HTMLLIElement>('.sem-week li')];
+    const w: Week = defaultWeek(root.dataset.preset as Preset);
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('.cell input')];
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+    const courses = root.querySelector<HTMLInputElement>('[data-courses]')!;
     const summary = root.querySelector<HTMLElement>('[data-summary]')!;
     const after = root.querySelector<HTMLElement>('[data-after]')!;
+    const afterLabel = root.querySelector<HTMLElement>('[data-after-label]')!;
     const before = root.querySelector<HTMLElement>('[data-before]')!;
     const cta = root.querySelector<HTMLAnchorElement>('[data-sem-cta]')!;
     let interacted = false;
 
-    const read = () => {
-      const h = (root.querySelector('input[name$="-h"]:checked') as HTMLInputElement).value;
-      const f = (root.querySelector('input[name$="-f"]:checked') as HTMLInputElement).value;
-      const c = (root.querySelector('input[name$="-c"]') as HTMLInputElement).checked;
-      return { h, f, c };
+    const sync = () => {
+      boxes.forEach((b) => (w.on[+b.dataset.m! as 0 | 1][+b.dataset.d!] = b.checked));
+      w.courses = courses.checked;
     };
 
-    const render = (animate: boolean) => {
-      const { h, f, c } = read();
-      const F = cfg.pricing.formulas[f];
-      const S = cfg.sizes[h];
-      const large = h === 'large';
-      const meals = large ? F.dishes : Math.floor(F.portions / S.n);
-      const dinners = Math.min(7, meals);
-      const lunches = Math.max(0, meals - 7);
-      cells.forEach((li, i) => {
-        const full = i < dinners;
-        li.classList.toggle('full', full);
-        li.querySelector('.dish')!.textContent = full ? cfg.menu[i % F.dishes] : '';
-        li.querySelector('.extra')!.textContent = i < lunches ? '+ un midi' : '';
-        if (animate && full) {
-          li.classList.remove('drop');
-          void li.offsetWidth;
-          li.classList.add('drop');
-        }
+    const detail = () => {
+      const p = plan(w);
+      const f = !p.tier ? 'conseil' : p.tier.id === 'devis' ? 'conseil' : p.tier.id;
+      return { f, c: w.courses, people: Math.max(...w.people), repas: describe(w) };
+    };
+
+    const render = () => {
+      const p = plan(w);
+      steps.forEach((s) => {
+        const m = +s.dataset.step! as 0 | 1;
+        s.querySelector('output')!.textContent = String(w.people[m]);
+        (s.querySelector('[data-delta="-1"]') as HTMLButtonElement).disabled = w.people[m] === 0;
+        (s.querySelector('[data-delta="1"]') as HTMLButtonElement).disabled = w.people[m] === MAX_PEOPLE;
       });
-      const price = F.price + (c ? cfg.pricing.shopping : 0);
-      const hours = F.hours + (c ? 1 : 0);
-      if (large) {
-        summary.textContent = `${F.dishes} plats préparés en grande quantité : ${dinners} dîners pour 5 personnes ou plus. Séance un peu plus longue, sur devis.`;
-        after.textContent = `dès ${euro(afterCredit(price))}`;
-        before.textContent = `soit dès ${euro(price)} avant crédit · durée ajustée à votre foyer`;
-      } else {
-        summary.textContent = `≈ ${F.portions} portions : ${dinners} dîners pour ${S.label} personnes${lunches ? `, plus ${lunches} déjeuners` : ''}${dinners < 7 && !lunches ? `, du lundi au ${['', '', '', 'mercredi', 'jeudi', 'vendredi', 'samedi'][dinners] || 'samedi'}` : ''}.`;
-        after.textContent = euro(afterCredit(price));
-        before.textContent = `soit ${euro(price)} avant crédit · environ ${hours} h${c ? ' courses comprises' : ' chez vous'}`;
-      }
-      return { h, f, c };
+      root.querySelectorAll<HTMLElement>('.mh').forEach((h, k) => h.classList.toggle('off', w.people[k] === 0));
+      boxes.forEach((b) => {
+        const m = +b.dataset.m! as 0 | 1;
+        b.closest('.cell')!.classList.toggle('off', w.people[m] === 0);
+        b.nextElementSibling!.querySelector('.dish')!.textContent = p.dish[m][+b.dataset.d!] ?? '';
+      });
+
+      const c = copy(w);
+      summary.innerHTML = c.summary;
+      after.textContent = c.after;
+      afterLabel.hidden = !c.afterLabel;
+      before.textContent = c.before;
     };
 
-    root.addEventListener('change', () => {
-      const state = render(true);
+    const changed = () => {
+      render();
       if (!interacted) {
         interacted = true;
         window.lcdcTrack?.('semainier_interaction', { link_location: root.dataset.location });
       }
-      document.dispatchEvent(new CustomEvent('lcdc:selection', { detail: state }));
+      document.dispatchEvent(new CustomEvent('lcdc:selection', { detail: detail() }));
+    };
+
+    steps.forEach((s) => s.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-delta]');
+      if (!btn) return;
+      const m = +s.dataset.step! as 0 | 1;
+      const was = w.people[m];
+      w.people[m] = Math.min(MAX_PEOPLE, Math.max(0, was + Number(btn.dataset.delta)));
+      // First person at this meal and nothing ticked yet: tick Monday to Friday.
+      if (was === 0 && w.people[m] > 0 && !w.on[m].some(Boolean)) {
+        boxes.filter((b) => +b.dataset.m! === m && +b.dataset.d! < 5).forEach((b) => (b.checked = true));
+        sync();
+      }
+      changed();
+    }));
+
+    root.addEventListener('change', (e) => {
+      const b = e.target as HTMLInputElement;
+      if (b.matches('.cell input')) {
+        const m = +b.dataset.m! as 0 | 1;
+        if (b.checked && w.people[m] === 0) w.people[m] = 1; // ticking a meal nobody eats: count one person
+        const cell = b.closest('.cell')!;
+        cell.classList.remove('drop');
+        if (b.checked) { void (cell as HTMLElement).offsetWidth; cell.classList.add('drop'); }
+      }
+      sync();
+      changed();
     });
-    cta.addEventListener('click', () => {
-      document.dispatchEvent(new CustomEvent('lcdc:selection', { detail: read() }));
-    });
-    render(false);
+
+    cta.addEventListener('click', () => document.dispatchEvent(new CustomEvent('lcdc:selection', { detail: detail() })));
+    sync();
+    render();
   });
 </script>
