@@ -115,8 +115,8 @@ const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking
     </footer>
 
     <nav class="mbar" aria-label="Actions rapides" data-mbar>
-      <a class="btn" href={url('/#devis')} data-track="cta_click" data-track-location="mobile-bar">Mon menu et mon devis</a>
-      {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="mobile-bar" aria-label="WhatsApp"><Icon name="whatsapp" /></a>}
+      <a class="btn" href={url('/#devis')} data-track="cta_click" data-track-location="floating">Essayez une séance <Icon name="arrow" /></a>
+      {wa && <a class="btn btn-wa" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click" data-track-location="floating" aria-label="Écrire à Clément sur WhatsApp"><Icon name="whatsapp" /><span class="wa-l">WhatsApp</span></a>}
     </nav>
 
     <div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
@@ -127,7 +127,8 @@ const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking
       </div>
     </div>
     <script>
-      // Show the mobile action bar after the first viewport, hide it while the quote form is on screen.
+      // Floating actions (bar on phones, buttons bottom-right on desktop): shown after the first viewport,
+      // hidden while the quote form is on screen.
       const bar = document.querySelector('[data-mbar]');
       const form = document.getElementById('devis');
       if (bar) {
@@ -136,7 +137,15 @@ const wa = waLink('Bonjour Clément, je suis intéressé(e) par le batch cooking
         const hero = document.querySelector('.hero, .ph');
         if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }).observe(hero);
         else { pastHero = true; sync(); }
-        if (form) new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; sync(); }).observe(form);
+        // Also step aside while an in-page "Essayez" button or the form is on screen: one red button at a time.
+        const seen = new Set<Element>();
+        const io = new IntersectionObserver((es) => {
+          es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+          formVisible = seen.size > 0;
+          sync();
+        });
+        if (form) io.observe(form);
+        document.querySelectorAll('[data-hide-floating]').forEach((el) => io.observe(el));
       }
     </script>
   </body>

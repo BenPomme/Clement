@@ -13,12 +13,6 @@ import { url, waLink } from '../lib/links';
 import chili from '../assets/dishes/chili-riz.png';
 import burrata from '../assets/dishes/burrata-legumes.png';
 import crumbles from '../assets/dishes/crumbles.png';
-import mille from '../assets/dishes/millefeuille-mangue.png';
-import saumon from '../assets/dishes/saumon-oeuf-poche.png';
-import poke from '../assets/dishes/poke-bowl.png';
-import poisson from '../assets/dishes/poisson-petits-pois.png';
-import montblanc from '../assets/dishes/mont-blanc.png';
-import beignets from '../assets/dishes/beignets.png';
 import choco from '../assets/dishes/chocolat-griottes.png';
 import portrait from '../assets/photos/clement-portrait.jpg';
 import enCuisine from '../assets/photos/clement-en-cuisine.jpg';
@@ -69,12 +63,12 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
         <li>
           <span class="when tape">Trois jours avant</span>
           <h3>Vous recevez votre menu</h3>
-          <p>Trois ou cinq plats de saison, que vous modifiez à volonté. Avec la liste de courses, ou Clément s'en occupe.</p>
+          <p>De trois à sept plats de saison, que vous modifiez à volonté. Avec la liste de courses, ou Clément s'en occupe.</p>
         </li>
         <li>
           <span class="when tape">Le jour J</span>
           <h3>Clément cuisine chez vous</h3>
-          <p>Trois à quatre heures, que vous soyez là ou non. Il range, fait la vaisselle et nettoie le plan de travail.</p>
+          <p>De trois à cinq heures, que vous soyez là ou non. Il range, fait la vaisselle et nettoie le plan de travail.</p>
         </li>
         <li>
           <span class="when tape">Du lundi au vendredi</span>
@@ -85,22 +79,31 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
     </div>
   </section>
 
-  <!-- ── The food ─────────────────────────────────────────── -->
-  <section class="section cloth food" aria-labelledby="food-title">
-    <div class="wrap">
-      <div class="food-head">
-        <h2 id="food-title">Ce que Clément cuisine</h2>
-        <p class="measure">Des plats de cuisinier, pas de la cantine en barquette. Ces photos ont été prises par Clément, dans ses cuisines. Chez vous, le menu suit vos goûts et la saison.</p>
+  <!-- ── Clément ──────────────────────────────────────────── -->
+  <section class="section chef" aria-labelledby="chef-title">
+    <div class="wrap chef-grid">
+      <figure class="chef-photo">
+        <Picture class="main" src={portrait} alt="Clément Bahr en veste et tablier noirs de cuisinier, son nom brodé sur le tablier, un rouleau à pâtisserie et une spatule croisés dans les bras" widths={[400, 700, 1000]} sizes="(min-width: 62rem) 36vw, 84vw" formats={['avif', 'webp']} layout="none" />
+        <div class="inset">
+          <Picture src={enCuisine} alt="Clément émince un fenouil sur une planche en bois, près d'une fenêtre" widths={[300, 500]} sizes="(min-width: 62rem) 15vw, 40vw" formats={['avif', 'webp']} layout="none" loading="lazy" />
+          <figcaption class="tape">Le même geste qu'en restaurant</figcaption>
+        </div>
+      </figure>
+      <div class="chef-copy">
+        <h2 id="chef-title">Clément Bahr, cuisinier</h2>
+        <blockquote class="chef-quote">
+          <p>«&nbsp;J'ai été formé à la cuisine française et alsacienne traditionnelle, dans l'une des meilleures winstubs d'Alsace. Mais ma vraie passion, c'est la cuisine asiatique&nbsp;: de l'Inde au Japon, de la Chine à la Thaïlande, en passant par l'Indonésie, l'archipel des épices.&nbsp;»</p>
+        </blockquote>
+        <p>Chez vous, ça donne une cuisine de famille qui voyage&nbsp;: une poule au pot un soir, un curry vert le lendemain. Avec les réflexes de la brigade&nbsp;: des bases maison, des sauces qui ont du goût, et l'organisation qui permet de sortir cinq plats en quatre heures. Il vit dans la région de Mulhouse.</p>
       </div>
-      <div class="table">
-        <Plate src={saumon} class="t t-a" alt="Muffins grillés, avocat, saumon fumé, œuf poché, oignon rouge, câpres et graines" label="Saumon fumé, œuf poché" sizes="(min-width: 62rem) 26vw, 46vw" labelPos="auto auto 2% 4%" tilt={-2} />
-        <Plate src={poke} class="t t-b" alt="Poke bowl : riz, avocat, edamame, haricots verts, concombre, chou, sauce sésame" label="Poke bowl" sizes="(min-width: 62rem) 30vw, 52vw" labelPos="auto 6% -2% auto" tilt={2} />
-        <Plate src={poisson} class="t t-c" alt="Filet de poisson blanc sous des rondelles de radis, purée de petits pois, beurre blanc" label="Poisson, petits pois, radis" sizes="(min-width: 62rem) 26vw, 50vw" labelPos="auto auto -6% 10%" tilt={-1} />
-        <Plate src={mille} class="t t-d" alt="Mille-feuille de feuilles de brick caramélisées, crème légère et dés de mangue" label="Mille-feuille mangue" sizes="(min-width: 62rem) 24vw, 46vw" labelPos="4% auto auto -2%" tilt={3} />
-        <Plate src={beignets} class="t t-f" alt="Beignets dorés aux herbes, citron vert, sauce aigre-douce pimentée" label="Beignets, sauce aigre-douce" sizes="(min-width: 62rem) 20vw, 42vw" labelPos="auto auto -6% 0" tilt={1} />
-        <Plate src={montblanc} class="t t-g" alt="Mont-blanc : vermicelles de crème de marrons et chantilly dans un pot en porcelaine" label="Mont-blanc" sizes="(min-width: 62rem) 18vw, 40vw" labelPos="auto 0 -4% auto" tilt={-3} />
-        <Plate src={choco} class="t t-h" alt="Dessert chocolat, griottes, chantilly et menthe fraîche" label="Chocolat, griottes" sizes="(min-width: 62rem) 14vw, 34vw" widths={[240, 360, 508]} labelPos="auto auto -10% -8%" tilt={2} />
+    </div>
+
+    <div class="wrap sa-carte">
+      <div class="sa-carte-head">
+        <h3>Sa carte, d'ici et d'ailleurs</h3>
+        <p>Les plats que Clément aime cuisiner. Ils entrent dans votre menu si vous le voulez, à côté de vos classiques. Touchez un plat pour le voir&nbsp;: les photos marquées «&nbsp;Photo de Clément&nbsp;» sortent de ses cuisines.</p>
       </div>
+      <TasteMap />
       <div class="choose">
         <h3>Vous choisissez, ou vous laissez faire</h3>
         <dl>
@@ -108,6 +111,9 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
           <div><dt>Vos classiques</dt><dd>Le hachis de mamie, le curry du jeudi : donnez-lui vos recettes, il les cuisine.</dd></div>
           <div><dt>Un régime à suivre</dt><dd>Sans gluten, végétarien, peu salé, riche en protéines : le menu se construit autour.</dd></div>
         </dl>
+      </div>
+      <div class="chef-cta" data-hide-floating>
+        <a class="btn" href="#devis" data-track="cta_click" data-track-location="chef">Essayez une séance <Icon name="arrow" /></a>
       </div>
     </div>
   </section>
@@ -182,37 +188,6 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
         <li><h3>Les sportifs</h3><p>Des plats riches en protéines, des portions calibrées, et plus besoin de cuisiner le dimanche soir.</p></li>
         <li><h3>Les frontaliers</h3><p>Vous travaillez à Bâle et rentrez tard ? Si vous habitez en France, vous avez droit au crédit d'impôt.</p></li>
       </ul>
-    </div>
-  </section>
-
-  <!-- ── Clément ──────────────────────────────────────────── -->
-  <section class="section chef" aria-labelledby="chef-title">
-    <div class="wrap chef-grid">
-      <figure class="chef-photo">
-        <Picture class="main" src={portrait} alt="Clément Bahr en veste et tablier noirs de cuisinier, son nom brodé sur le tablier, un rouleau à pâtisserie et une spatule croisés dans les bras" widths={[400, 700, 1000]} sizes="(min-width: 62rem) 36vw, 84vw" formats={['avif', 'webp']} layout="none" />
-        <div class="inset">
-          <Picture src={enCuisine} alt="Clément émince un fenouil sur une planche en bois, près d'une fenêtre" widths={[300, 500]} sizes="(min-width: 62rem) 15vw, 40vw" formats={['avif', 'webp']} layout="none" loading="lazy" />
-          <figcaption class="tape">Le même geste qu'en restaurant</figcaption>
-        </div>
-      </figure>
-      <div class="chef-copy">
-        <h2 id="chef-title">Clément Bahr, cuisinier</h2>
-        <blockquote class="chef-quote">
-          <p>«&nbsp;J'ai été formé à la cuisine française et alsacienne traditionnelle, dans l'une des meilleures winstubs d'Alsace. Mais ma vraie passion, c'est la cuisine asiatique&nbsp;: de l'Inde au Japon, de la Chine à la Thaïlande, en passant par l'Indonésie, l'archipel des épices.&nbsp;»</p>
-        </blockquote>
-        <p>Chez vous, ça donne une cuisine de famille qui voyage&nbsp;: une poule au pot un soir, un curry vert le lendemain. Avec les réflexes de la brigade&nbsp;: des bases maison, des sauces qui ont du goût, et l'organisation qui permet de sortir cinq plats en quatre heures. Il vit dans la région de Mulhouse.</p>
-      </div>
-    </div>
-
-    <div class="wrap sa-carte">
-      <div class="sa-carte-head">
-        <h3>Sa carte, d'ici et d'ailleurs</h3>
-        <p>Les plats que Clément préfère cuisiner. Ils entrent dans votre menu si vous le voulez, à côté de vos classiques. Touchez un plat pour le voir.</p>
-      </div>
-      <TasteMap />
-      <div class="chef-cta">
-        <a class="btn" href="#devis" data-track="cta_click" data-track-location="chef">Parler à Clément de votre semaine <Icon name="arrow" /></a>
-      </div>
     </div>
   </section>
 
@@ -311,26 +286,11 @@ const ld = [businessLd(Astro.site, import.meta.env.BASE_URL), faqLd()];
   .timeline h3 { margin-bottom: 0.6rem; }
   .timeline p { color: var(--ink-soft); }
 
-  /* Food table */
-  .food-head { display: grid; gap: 1.25rem; align-items: end; }
-  .food-head p { color: #eef1fa; font-size: 1.12rem; }
-  @media (min-width: 62rem) { .food-head { grid-template-columns: 1fr 1fr; } }
-  .table { position: relative; margin-top: clamp(2.5rem, 2rem + 3vw, 5rem); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(1.5rem, 1rem + 2vw, 3rem) clamp(0.5rem, 0.2rem + 1vw, 1.25rem); align-items: center; }
-  :global(.t) { grid-column: span 6; }
-  @media (min-width: 62rem) {
-    :global(.t-a) { grid-column: 1 / span 4; }
-    :global(.t-b) { grid-column: 5 / span 5; margin-top: -2rem; }
-    :global(.t-c) { grid-column: 10 / span 3; align-self: end; }
-    :global(.t-d) { grid-column: 1 / span 3; margin-top: 1rem; }
-    :global(.t-f) { grid-column: 4 / span 4; margin-top: 2rem; }
-    :global(.t-g) { grid-column: 8 / span 2; }
-    :global(.t-h) { grid-column: 10 / span 3; justify-self: center; width: 72%; margin-top: 2.5rem; }
-  }
-  .table :global(.tape) { font-size: 0.92rem; }
-  .choose { margin-top: clamp(3rem, 2.5rem + 3vw, 5.5rem); padding-top: 2rem; border-top: 1px solid rgb(255 255 255 / 0.25); display: grid; gap: 1.5rem; }
+  .choose { margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem); padding-top: 2rem; border-top: 1px solid var(--linen-line); display: grid; gap: 1.5rem; }
+  .choose h3 { font-size: clamp(1.4rem, 1.2rem + 1vw, 1.9rem); letter-spacing: -0.02em; }
   .choose dl { margin: 0; display: grid; gap: 1.5rem 2.5rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
   .choose dt { font-family: var(--display); font-weight: 750; font-size: 1.3rem; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
-  .choose dd { margin: 0; color: #e3e8f6; }
+  .choose dd { margin: 0; color: var(--ink-soft); }
   @media (min-width: 62rem) { .choose { grid-template-columns: 0.8fr 2fr; } }
 
   /* Prices */

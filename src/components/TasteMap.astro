@@ -15,7 +15,7 @@ type Place = { n: number; place: string; dishes: string[]; at: [number, number];
 
 // Dishes as Clément listed them; `at` = origin of the dish, `lab` = where its tape sits.
 const places: Place[] = [
-  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon', 'Quiches'], at: [7.34, 47.75], lab: [-44, 58], home: true },
+  { n: 1, place: 'France', dishes: ['Poule au pot', 'Papillotes de saumon', 'Quiches', 'Poisson, petits pois', 'Mille-feuille mangue', 'Mont-blanc', 'Chocolat, griottes'], at: [7.34, 47.75], lab: [-44, 58], home: true },
   { n: 2, place: 'Italie', dishes: ['Lasagnes', 'Pâtes bolognaise', 'Pâtes carbonara', 'Pâtes Alfredo'], at: [12.5, 41.9], lab: [36, 60] },
   { n: 3, place: 'Maghreb', dishes: ['Chorba'], at: [3.06, 36.75], lab: [2, 25] },
   { n: 4, place: 'Inde', dishes: ['Aloo gobi'], at: [76.5, 29.5], lab: [62, 13] },
@@ -82,7 +82,7 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
               <button type="button" class="dish has-img" aria-label={`${d.name} (voir la photo)`}>
                 <span class="peek" aria-hidden="true">
                   <Picture src={d.img.src} alt="" widths={[240, 360, 480].filter((w) => w <= d.img!.src.width)} sizes="12rem" formats={['avif', 'webp']} fallbackFormat="webp" layout="none" loading="lazy" />
-                  {d.img.ai && <span class="ill">Photo d'illustration</span>}
+                  <span class:list={['ill', { real: !d.img.ai }]}>{d.img.ai ? "Photo d'illustration" : 'Photo de Clément'}</span>
                 </span>
                 {d.name}
               </button>
@@ -144,6 +144,7 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
   }
   .peek :global(img) { width: 100%; height: auto; filter: drop-shadow(0 14px 14px rgb(6 14 40 / 0.4)) drop-shadow(0 3px 4px rgb(6 14 40 / 0.3)); }
   .ill { display: table; margin: 0.3rem auto 0; padding: 0.1rem 0.5rem; border-radius: 999px; background: var(--linen); font-family: var(--body); font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); box-shadow: 0 1px 3px rgb(10 20 50 / 0.2); }
+  .ill.real { background: var(--kelsch); color: #fff; }
   .has-img:hover .peek, .has-img:focus-visible .peek, .has-img.open .peek { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .peek { transition: opacity 0.1s linear; transform: none; } }
   @media (max-width: 40rem) {

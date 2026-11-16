@@ -23,12 +23,31 @@ Tout se règle dans [`src/config.ts`](src/config.ts) :
 
 Tant qu'un champ est vide, la fonction correspondante est simplement désactivée (pas de bouton WhatsApp, pas de bannière cookies, etc.).
 
+## Conversions pour la pub
+
+Une seule action principale partout sur le site : **« Essayez une séance »**. Elle mène au formulaire
+(`#devis`), réglé par défaut sur « Une séance d'essai ». Le semainier, le bouton flottant, la section
+Clément et le formulaire disent tous la même chose.
+
+| Conversion Google Ads | Événement | Quand | Réglage dans Ads |
+|---|---|---|---|
+| **Demande d'essai** | `generate_lead` | le formulaire est envoyé (ou, sans clé Web3Forms, WhatsApp s'ouvre avec la demande pré-remplie) | **Principale**, valeur = prix Semaine (`tracking.leadValue`), compter « une » par clic |
+| Clic WhatsApp | `whatsapp_click` | un bouton WhatsApp (en-tête, bouton flottant, formulaire, pied de page) | **Secondaire** (observation), pour ne pas compter deux fois le même client |
+| Clic téléphone | `phone_click` | lien `tel:` (quand `business.phone` est rempli) | Secondaire |
+
+Suivi seulement dans GA4 (pas des conversions Ads) : `cta_click` (bouton « Essayez », avec `link_location` :
+`floating`, `semainier-hero`, `chef`…), `form_start`, `semainier_interaction`, `dish_photo`.
+
+À savoir :
+- Tant que `forms.web3formsKey` est vide, « Demande d'essai » se déclenche quand WhatsApp s'ouvre, même si la
+  personne n'envoie pas le message. Avec la clé, elle ne compte que les formulaires vraiment reçus : à faire avant de lancer les annonces.
+- La campagne optimise sur « Demande d'essai » uniquement ; les clics WhatsApp restent visibles dans les rapports.
+
 ## Mesure
 
 - Bannière de consentement (CNIL) : rien de Google ne se charge avant « Accepter ». Consent Mode v2.
-- Événements envoyés (dataLayer + GA4) : `generate_lead`, `whatsapp_click`, `phone_click`, `cta_click`, `form_start`, `semainier_interaction`.
-- Conversions Google Ads : `generate_lead` (avec valeur), `whatsapp_click`, `phone_click`, via les labels de `config.ts`.
-- Le gclid et les UTM sont joints à chaque demande de devis (champ `attribution`) pour rattacher un client à une campagne.
+- Événements envoyés (dataLayer + GA4) : `generate_lead`, `whatsapp_click`, `phone_click`, `cta_click`, `form_start`, `semainier_interaction`, `dish_photo`.
+- Le gclid et les UTM sont joints à chaque demande (champ `attribution`) pour rattacher un client à une campagne.
 - Page `/merci/` après envoi du formulaire (non indexée) : utilisable comme objectif de secours.
 
 ## Domaine
