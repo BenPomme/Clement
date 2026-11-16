@@ -77,5 +77,5 @@ export const tracking = {
 // Form backend (static hosting). Create a free access key at https://web3forms.com
 // with Clément's e-mail address, then paste it here.
 export const forms = {
-  web3formsKey: '',
+  web3formsKey: '35651f74-a2e2-4a37-98b6-c24f4a819998',
 };
